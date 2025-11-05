@@ -1,0 +1,409 @@
+# Re-run creation for "vitrine-pro.html" after kernel reset.
+from pathlib import Path
+
+SUPABASE_URL = "https://ikrzslkihibraaalenxp.supabase.co"
+SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4"
+
+html = """<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Vitrine do Vendedor • Seminovos</title>
+<meta name="description" content="Catálogo de veículos com proposta rápida no WhatsApp e painel do vendedor – Supabase."/>
+<link rel="icon" href="data:,">
+<style>
+  :root{--bg:#0b1220;--card:#0f172a;--line:rgba(255,255,255,.10);--muted:#9aa6b2;--text:#eaf2ff;--brand:#22d3ee;--accent:#25D366;}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 14px}
+  header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(2,6,23,.9),rgba(2,6,23,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  h1{font-size:clamp(18px,3vw,24px);margin:8px 0;color:#e5f4ff}
+  .muted{color:var(--muted)}
+  .nav{display:flex;gap:10px;align-items:center}
+  .btn,.chip{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1624;color:#eaf2ff;text-decoration:none;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#031b11;border-color:transparent;font-weight:800}
+  .btn.soft{background:#0f1624}
+  .btn.ghost{background:transparent}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 22px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02))}
+  .thumb{aspect-ratio:16/10;background:#0a1324}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .pad{padding:12px}
+  .title{font-weight:800;margin:2px 0}
+  .meta{font-size:13px;color:var(--muted)}
+  .price{font-size:20px;font-weight:900;margin:8px 0}
+  .filters{display:grid;grid-template-columns:1fr 130px 150px 150px 170px;gap:10px;margin-top:12px}
+  input,select{padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1624;color:#eaf2ff}
+  .section-title{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+  .pill{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+  footer{border-top:1px solid var(--line);color:#b7c3cf;padding:16px;margin-top:20px}
+  .hide{display:none}
+  .hero{display:grid;grid-template-columns:1fr 360px;gap:16px}
+  @media(max-width:960px){.hero{grid-template-columns:1fr}}
+  .stack{display:grid;gap:10px}
+  .banner{border:1px dashed var(--line);border-radius:14px;padding:10px;text-align:center;color:#a9b6c3}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap" style="display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 0">
+    <div>
+      <h1>Vitrine de Seminovos</h1>
+      <div class="muted" style="font-size:13px">Catálogo conectado ao Supabase • Proposta rápida no WhatsApp</div>
+    </div>
+    <nav class="nav">
+      <a class="btn soft" href="#/estoque" onclick="return route('estoque')">Estoque</a>
+      <a class="btn soft" href="#/admin" onclick="return route('admin')">Admin</a>
+      <a id="btnWA" class="btn primary" href="#" target="_blank" rel="noreferrer">WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- HOME / ESTOQUE -->
+  <section id="page-estoque">
+    <div class="filters">
+      <input id="q" type="search" placeholder="Buscar por modelo/marca…">
+      <select id="fy"><option value="">Ano min.</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select>
+      <select id="ff"><option value="">Combustível</option><option>Flex</option><option>Gasolina</option><option>Diesel</option><option>Híbrido</option><option>Elétrico</option></select>
+      <select id="fg"><option value="">Câmbio</option><option>Automático</option><option>Manual</option></select>
+      <select id="fs"><option value="recent">Mais recentes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="km-asc">Menor KM</option></select>
+    </div>
+
+    <div class="section-title">
+      <h2 style="margin:12px 0">Ofertas em destaque</h2>
+      <span class="pill">Atualiza em tempo real</span>
+    </div>
+    <div id="featured" class="grid"></div>
+
+    <div class="section-title">
+      <h2 style="margin:12px 0">Estoque completo</h2>
+      <span class="pill"><span id="count">0</span> veículos</span>
+    </div>
+    <div id="list" class="grid"></div>
+  </section>
+
+  <!-- DETALHE -->
+  <section id="page-detalhe" class="hide">
+    <div class="hero">
+      <div class="card">
+        <div class="thumb" id="dt-foto"></div>
+        <div class="pad stack">
+          <div class="title" id="dt-title"></div>
+          <div class="meta" id="dt-meta"></div>
+          <div class="price" id="dt-price"></div>
+        </div>
+      </div>
+      <aside class="stack">
+        <div class="banner">Simulador ilustrativo – ajuste abaixo</div>
+        <div class="card pad">
+          <div class="muted" style="font-size:12px">Entrada (R$)</div>
+          <input id="s-entrada" type="number" value="20000">
+          <div class="muted" style="font-size:12px">Meses</div>
+          <input id="s-meses" type="number" value="48">
+          <div class="muted" style="font-size:12px">Taxa mensal (%)</div>
+          <input id="s-taxa" type="number" step="0.01" value="1.75">
+          <div class="muted" style="font-size:12px;margin-top:6px">Parcela estimada</div>
+          <div id="s-parcela" class="price">R$ 0,00</div>
+          <button id="btnProposta" class="btn primary" style="width:100%;margin-top:10px">Proposta rápida</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="page-admin" class="hide">
+    <div id="box-login" class="card pad">
+      <h2>Admin • Acesso</h2>
+      <div class="muted" style="font-size:13px">Receba um link mágico no e-mail para gerenciar a vitrine.</div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <input id="email" placeholder="seu@email">
+        <button id="send" class="btn primary">Enviar link</button>
+      </div>
+    </div>
+
+    <div id="box-app" class="hide">
+      <div class="section-title" style="margin-top:6px">
+        <h2 id="dealerInfo">Carregando…</h2>
+        <div class="nav">
+          <button class="btn soft" id="newCar">+ Novo</button>
+          <button class="btn soft" id="seed">Seed (6 demos)</button>
+          <button class="btn soft" id="refresh">Atualizar</button>
+          <button class="btn ghost" id="logout">Sair</button>
+        </div>
+      </div>
+      <div id="listAdmin" class="stack"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  © <span id="y"></span> — Vitrine conectada ao Supabase. Dados e imagens meramente ilustrativos.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = "__SUPABASE_URL__";
+const SUPABASE_ANON = "__SUPABASE_ANON__";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const DEALER_DEFAULT_PHONE = "5591XXXXXXXXX";
+const WA = (digits, t="Olá!") => "https://wa.me/" + digits + "?text=" + encodeURIComponent(t);
+
+const $ = (s, c=document) => c.querySelector(s);
+const BRL = (n) => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const digits = (s) => String(s||"").replace(/\\D/g,"");
+const show = (id) => {
+  ["page-estoque","page-detalhe","page-admin"].forEach(x => $("#"+x).classList.add("hide"));
+  $("#"+id).classList.remove("hide");
+};
+const debounce = (fn, ms=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+
+const DEMO = [
+  { id: "demo1", title:"Volkswagen Polo 1.0", year:2024, km:45806, gearbox:"Manual", fuel:"Flex", price:72990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=VW+Polo"] },
+  { id: "demo2", title:"Fiat Cronos Drive 1.0", year:2024, km:46698, gearbox:"Manual", fuel:"Flex", price:75990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Fiat+Cronos"] },
+  { id: "demo3", title:"Jeep Renegade Longitude 1.3", year:2024, km:45500, gearbox:"Automático", fuel:"Flex", price:111990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=Jeep+Renegade"] },
+  { id: "demo4", title:"Chevrolet Onix LT 1.0", year:2024, km:44768, gearbox:"Manual", fuel:"Flex", price:69990, bairro:"Belém", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Onix+LT"] },
+  { id: "demo5", title:"Hyundai HB20 Sense 1.0", year:2024, km:41104, gearbox:"Manual", fuel:"Flex", price:67990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=HB20"] },
+  { id: "demo6", title:"Nissan Kicks Advance 1.6", year:2024, km:40120, gearbox:"Automático", fuel:"Flex", price:108990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=Nissan+Kicks"] },
+];
+
+let cache = [];
+let dealerPhone = DEALER_DEFAULT_PHONE;
+
+async function fetchVehicles(){
+  const { data, error } = await sb.from("vehicle_public").select("*").order("destaque",{ascending:false}).order("created_at",{ascending:false});
+  cache = (!error && data && data.length) ? data : DEMO;
+  renderCatalog();
+  renderFeatured();
+  $("#count").textContent = cache.length;
+}
+
+function cardHTML(v){
+  const foto = (v.photos && v.photos[0]) || "https://placehold.co/800x500?text=Sem+foto";
+  const km   = (v.km!=null) ? v.km.toLocaleString("pt-BR")+" km" : "";
+  const meta = [v.year, km, v.gearbox, v.fuel].filter(Boolean).join(" • ");
+  return `<article class="card">
+    <a href="#/carro/${v.id}" onclick="return navDetalhe('${v.id}')">
+      <div class="thumb"><img src="${foto}" alt="${v.title||''}"></div>
+    </a>
+    <div class="pad">
+      <div class="title">${v.title||""}</div>
+      <div class="meta">${meta}</div>
+      <div class="price">${BRL(v.price)}</div>
+      <div style="display:flex;gap:8px">
+        <a class="btn primary" href="#" onclick="return interesse('${v.id}')">Proposta rápida</a>
+        <a class="btn" href="#/carro/${v.id}" onclick="return navDetalhe('${v.id}')">Detalhes</a>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderFeatured(){
+  const el = $("#featured");
+  const arr = cache.filter(v => v.destaque);
+  el.innerHTML = arr.map(cardHTML).join("") || "<div class='muted'>Sem destaques no momento.</div>";
+}
+
+function renderCatalog(){
+  const q  = $("#q").value.trim().toLowerCase();
+  const fy = $("#fy").value;
+  const ff = $("#ff").value;
+  const fg = $("#fg").value;
+  const fs = $("#fs").value;
+  let list = cache.filter(v => (
+    (!q || (v.title||'').toLowerCase().includes(q)) &&
+    (!fy || v.year >= +fy) &&
+    (!ff || v.fuel === ff) &&
+    (!fg || v.gearbox === fg)
+  ));
+  switch(fs){
+    case "price-asc":  list.sort((a,b)=> (a.price||0)-(b.price||0)); break;
+    case "price-desc": list.sort((a,b)=> (b.price||0)-(a.price||0)); break;
+    case "km-asc":     list.sort((a,b)=> (a.km||0)-(b.km||0)); break;
+    default:           list.sort((a,b)=> (b.year||0)-(a.year||0)); break;
+  }
+  $("#list").innerHTML = list.map(cardHTML).join("") || "<p>Nenhum veículo encontrado.</p>";
+}
+
+function navDetalhe(id){
+  const v = cache.find(x => x.id == id);
+  if(!v) return false;
+  show("page-detalhe");
+  const foto = (v.photos && v.photos[0]) || "https://placehold.co/1200x700?text=Sem+foto";
+  $("#dt-foto").innerHTML = `<img src="${foto}" style="width:100%;height:100%;object-fit:cover">`;
+  $("#dt-title").textContent = v.title||"";
+  const km = (v.km!=null) ? v.km.toLocaleString("pt-BR")+" km" : "";
+  $("#dt-meta").textContent = [v.year, km, v.gearbox, v.fuel].filter(Boolean).join(" • ");
+  $("#dt-price").textContent = BRL(v.price);
+  const entrada = $("#s-entrada"), meses=$("#s-meses"), taxa=$("#s-taxa"), parc=$("#s-parcela");
+  const recalc = ()=>{
+    const e = +entrada.value||0, m=+meses.value||1, i=(+taxa.value||0)/100, pv=Math.max(0,(v.price||0)-e);
+    const p = (i>0)? (pv*i)/(1-Math.pow(1+i,-m)) : (pv/m);
+    parc.textContent = BRL(p);
+  };
+  [entrada,meses,taxa].forEach(inp => inp.oninput = recalc); recalc();
+  $("#btnProposta").onclick = ()=> interesse(v.id);
+  return false;
+}
+
+async function interesse(id){
+  const v = cache.find(x => x.id == id); if(!v) return false;
+  const km = (v.km!=null) ? v.km.toLocaleString("pt-BR")+" km" : "";
+  const msg = `Olá! Tenho interesse no ${v.title} (${v.year}, ${km}) por ${BRL(v.price)}.`;
+  try{ await sb.from("lead").insert({ vehicle_id:id, channel:"interest", utm_source:"site", utm_medium:"proposta", utm_campaign:"catalog", message: msg }); }catch(e){}
+  location.href = WA(dealerPhone, msg);
+  return false;
+}
+
+// ===== ADMIN =====
+$("#send").onclick = async ()=>{
+  const email = $("#email").value.trim();
+  const { error } = await sb.auth.signInWithOtp({ email });
+  if(error) alert(error.message); else alert("Confira seu e-mail e volte pelo link.");
+};
+
+$("#logout").onclick = async ()=>{
+  await sb.auth.signOut();
+  $("#box-app").classList.add("hide");
+  $("#box-login").classList.remove("hide");
+};
+
+function setDealerWA(phoneRaw){
+  const d = digits(phoneRaw);
+  if(d.length>=11){
+    dealerPhone = d;
+    $("#btnWA").href = WA(dealerPhone);
+  }else{
+    dealerPhone = DEALER_DEFAULT_PHONE;
+    $("#btnWA").href = WA(deALER_DEFAULT_PHONE);
+  }
+}
+
+async function bootstrapAdmin(session){
+  if(!session) return;
+  $("#box-login").classList.add("hide");
+  $("#box-app").classList.remove("hide");
+  const user = session.user;
+
+  let { data: mem } = await sb.from("dealer_member").select("dealer_id").eq("user_id", user.id).maybeSingle();
+  if(!mem){
+    const name = prompt("Nome da vitrine (ex.: Vendedor – Belém/PA)","Minha Vitrine – Belém/PA") || "Minha Vitrine – Belém/PA";
+    const whatsapp = prompt("WhatsApp (55+DDD+número)","5591XXXXXXXXX") || "5591XXXXXXXXX";
+    const { data: d, error: e1 } = await sb.from("dealer").insert({ name, city:"Belém/PA", whatsapp, created_by: user.id }).select("id").single();
+    if(e1){ alert("Erro criando dealer: "+e1.message); return; }
+    const { error: e2 } = await sb.from("dealer_member").insert({ dealer_id:d.id, user_id:user.id, role:"owner" });
+    if(e2){ alert("Erro membership: "+e2.message); return; }
+    mem = { dealer_id: d.id };
+  }
+  const dealerId = mem.dealer_id;
+  const { data: dealer } = await sb.from("dealer").select("*").eq("id", dealerId).single();
+  $("#dealerInfo").textContent = dealer.name + " • " + (dealer.city||"") + " • WhatsApp: " + dealer.whatsapp;
+  setDealerWA(dealer.whatsapp);
+
+  async function listAdmin(){
+    const { data } = await sb.from("vehicle").select("id,title,price,year,km,status,destaque").eq("dealer_id", dealerId).order("updated_at",{ascending:false});
+    $("#listAdmin").innerHTML = (data||[]).map(v => `
+      <div class="card pad" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1"><strong>${v.title}</strong> • ${v.year} • ${(v.km||0).toLocaleString('pt-BR')} km • <span class="muted">${v.status}</span> ${v.destaque?'• <span class="pill">Destaque</span>':''}</div>
+        <button class="btn soft" onclick="admFoto('${v.id}','${dealerId}')">Fotos</button>
+        <button class="btn soft" onclick="admEdit('${v.id}')">Editar</button>
+        <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
+        <button class="btn soft" onclick="admStar('${v.id}')">Destaque</button>
+      </div>
+    `).join("") || "<div class='muted'>Sem veículos. Use + Novo ou Seed.</div>";
+  }
+  window.listAdmin = listAdmin;
+
+  $("#newCar").onclick = async ()=>{
+    const title   = prompt("Título (ex.: Polo 1.0 2024)"); if(!title) return;
+    const price   = +prompt("Preço (números)")||0;
+    const year    = +prompt("Ano")||2024;
+    const km      = +prompt("KM")||0;
+    const gearbox = prompt("Câmbio (Automático/Manual)","Manual")||"Manual";
+    const fuel    = prompt("Combustível (Flex/Gasolina/Diesel/Híbrido/Elétrico)","Flex")||"Flex";
+    const bairro  = prompt("Bairro","Belém")||"Belém";
+    const { error } = await sb.from("vehicle").insert({ dealer_id: dealerId, title, price, year, km, gearbox, fuel, bairro, status:"ativo" });
+    if(error) alert(error.message); else listAdmin();
+  };
+
+  $("#seed").onclick = async ()=>{
+    if(!confirm("Inserir 6 veículos de exemplo no banco?")) return;
+    const payload = DEMO.map(v => ({ dealer_id: dealerId, title:v.title, year:v.year, km:v.km, gearbox:v.gearbox, fuel:v.fuel, price:v.price, bairro:v.bairro, status:"ativo", destaque:!!v.destaque }));
+    const { error } = await sb.from("vehicle").insert(payload);
+    if(error) alert(error.message); else listAdmin();
+  };
+
+  $("#refresh").onclick = ()=> listAdmin();
+
+  window.admToggle = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("status").eq("id", id).single();
+    await sb.from("vehicle").update({ status: (v.status==='ativo'?'pausado':'ativo') }).eq("id", id);
+    listAdmin();
+  };
+
+  window.admEdit = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("*").eq("id", id).single();
+    const title = prompt("Título", v.title);
+    const price = +prompt("Preço", v.price);
+    const year  = +prompt("Ano", v.year);
+    const km    = +prompt("KM", v.km);
+    await sb.from("vehicle").update({ title, price, year, km }).eq("id", id);
+    listAdmin();
+  };
+
+  window.admStar = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("destaque").eq("id", id).single();
+    await sb.from("vehicle").update({ destaque: !v.destaque }).eq("id", id);
+    listAdmin(); fetchVehicles();
+  };
+
+  window.admFoto = async (id, dealerId)=>{
+    const input = Object.assign(document.createElement("input"),{ type:"file", accept:"image/*" });
+    input.onchange = async ()=>{
+      const file = input.files[0]; if(!file) return;
+      const path = dealerId + "/" + id + "/" + Date.now() + "-" + file.name;
+      const up = await sb.storage.from("car-photos").upload(path, file, { cacheControl:"3600", upsert:false });
+      if(up.error) return alert(up.error.message);
+      const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl;
+      await sb.from("vehicle_photo").insert({ vehicle_id:id, url, idx:0 });
+      alert("Foto enviada!");
+    };
+    input.click();
+  };
+
+  listAdmin();
+}
+
+sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
+sb.auth.onAuthStateChange((_evt, s)=>{ if(s?.session){ bootstrapAdmin(s.session); } });
+
+function route(path){
+  if(path==="estoque"){ show("page-estoque"); fetchVehicles(); return false; }
+  if(path==="admin"){ show("page-admin"); return false; }
+  return false;
+}
+window.addEventListener("hashchange", ()=>{
+  const h = location.hash.split("/");
+  if(h[1]==="carro" && h[2]){ navDetalhe(h[2]); }
+  else if(h[1]==="admin"){ show("page-admin"); }
+  else { show("page-estoque"); }
+});
+
+document.getElementById("y").textContent = new Date().getFullYear();
+["#q","#fy","#ff","#fg","#fs"].forEach(sel => document.querySelector(sel).addEventListener("input", debounce(renderCatalog,120)));
+sb.channel("rt").on("postgres_changes", { event:"*", schema:"public", table:"vehicle" }, fetchVehicles).subscribe();
+
+show("page-estoque");
+document.getElementById("btnWA").href = WA(DEALER_DEFAULT_PHONE);
+fetchVehicles();
+</script>
+</body>
+</html>
+"""
+
+html = html.replace("__SUPABASE_URL__", SUPABASE_URL).replace("__SUPABASE_ANON__", SUPABASE_ANON)
+Path("/mnt/data/vitrine-pro.html").write_text(html, encoding="utf-8")
+"/mnt/data/vitrine-pro.html criado"
