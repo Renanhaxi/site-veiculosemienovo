@@ -1,10 +1,4 @@
-# Re-run creation for "vitrine-pro.html" after kernel reset.
-from pathlib import Path
-
-SUPABASE_URL = "https://ikrzslkihibraaalenxp.supabase.co"
-SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4"
-
-html = """<!doctype html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
@@ -13,14 +7,14 @@ html = """<!doctype html>
 <meta name="description" content="Catálogo de veículos com proposta rápida no WhatsApp e painel do vendedor – Supabase."/>
 <link rel="icon" href="data:,">
 <style>
-  :root{--bg:#0b1220;--card:#0f172a;--line:rgba(255,255,255,.10);--muted:#9aa6b2;--text:#eaf2ff;--brand:#22d3ee;--accent:#25D366;}
+  :root{--bg:#0b1220;--card:#0f172a;--line:rgba(255,255,255,.10);--muted:#9aa6b2;--text:#eaf2ff;--accent:#25D366;}
   *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto}
   .wrap{max-width:1200px;margin:0 auto;padding:0 14px}
   header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(2,6,23,.9),rgba(2,6,23,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   h1{font-size:clamp(18px,3vw,24px);margin:8px 0;color:#e5f4ff}
   .muted{color:var(--muted)}
   .nav{display:flex;gap:10px;align-items:center}
-  .btn,.chip{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1624;color:#eaf2ff;text-decoration:none;cursor:pointer}
+  .btn{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1624;color:#eaf2ff;text-decoration:none;cursor:pointer}
   .btn.primary{background:var(--accent);color:#031b11;border-color:transparent;font-weight:800}
   .btn.soft{background:#0f1624}
   .btn.ghost{background:transparent}
@@ -145,39 +139,41 @@ html = """<!doctype html>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL  = "__SUPABASE_URL__";
-const SUPABASE_ANON = "__SUPABASE_ANON__";
+/* ========= CONFIG ========= */
+const SUPABASE_URL  = "https://ikrzslkihibraaalenxp.supabase.co".trim();
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4".trim();
+if(!/^https?:\/\//i.test(SUPABASE_URL)){ console.error("SUPABASE_URL inválida:", SUPABASE_URL); }
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+// WhatsApp padrão até carregar do dealer
 const DEALER_DEFAULT_PHONE = "5591XXXXXXXXX";
 const WA = (digits, t="Olá!") => "https://wa.me/" + digits + "?text=" + encodeURIComponent(t);
 
+/* ========= HELPERS ========= */
 const $ = (s, c=document) => c.querySelector(s);
 const BRL = (n) => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const digits = (s) => String(s||"").replace(/\\D/g,"");
-const show = (id) => {
-  ["page-estoque","page-detalhe","page-admin"].forEach(x => $("#"+x).classList.add("hide"));
-  $("#"+id).classList.remove("hide");
-};
+const digits = (s) => String(s||"").replace(/\D/g,"");
+const show = (id) => { ["page-estoque","page-detalhe","page-admin"].forEach(x => $("#"+x).classList.add("hide")); $("#"+id).classList.remove("hide"); };
 const debounce = (fn, ms=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
 
+/* ========= DEMO (fallback) ========= */
 const DEMO = [
-  { id: "demo1", title:"Volkswagen Polo 1.0", year:2024, km:45806, gearbox:"Manual", fuel:"Flex", price:72990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=VW+Polo"] },
-  { id: "demo2", title:"Fiat Cronos Drive 1.0", year:2024, km:46698, gearbox:"Manual", fuel:"Flex", price:75990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Fiat+Cronos"] },
+  { id: "demo1", title:"Volkswagen Polo 1.0", year:2024, km:45806, gearbox:"Manual", fuel:"Flex", price:72990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=VW+Polo"] },
+  { id: "demo2", title:"Fiat Cronos Drive 1.0",   year:2024, km:46698, gearbox:"Manual", fuel:"Flex", price:75990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Fiat+Cronos"] },
   { id: "demo3", title:"Jeep Renegade Longitude 1.3", year:2024, km:45500, gearbox:"Automático", fuel:"Flex", price:111990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=Jeep+Renegade"] },
-  { id: "demo4", title:"Chevrolet Onix LT 1.0", year:2024, km:44768, gearbox:"Manual", fuel:"Flex", price:69990, bairro:"Belém", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Onix+LT"] },
+  { id: "demo4", title:"Chevrolet Onix LT 1.0",  year:2024, km:44768, gearbox:"Manual", fuel:"Flex", price:69990, bairro:"Belém", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Onix+LT"] },
   { id: "demo5", title:"Hyundai HB20 Sense 1.0", year:2024, km:41104, gearbox:"Manual", fuel:"Flex", price:67990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=HB20"] },
   { id: "demo6", title:"Nissan Kicks Advance 1.6", year:2024, km:40120, gearbox:"Automático", fuel:"Flex", price:108990, bairro:"Belém", destaque:true, photos:["https://placehold.co/960x640/222/FFF?text=Nissan+Kicks"] },
 ];
 
+/* ========= CATÁLOGO ========= */
 let cache = [];
 let dealerPhone = DEALER_DEFAULT_PHONE;
 
 async function fetchVehicles(){
   const { data, error } = await sb.from("vehicle_public").select("*").order("destaque",{ascending:false}).order("created_at",{ascending:false});
   cache = (!error && data && data.length) ? data : DEMO;
-  renderCatalog();
-  renderFeatured();
+  renderCatalog(); renderFeatured();
   $("#count").textContent = cache.length;
 }
 
@@ -209,15 +205,9 @@ function renderFeatured(){
 
 function renderCatalog(){
   const q  = $("#q").value.trim().toLowerCase();
-  const fy = $("#fy").value;
-  const ff = $("#ff").value;
-  const fg = $("#fg").value;
-  const fs = $("#fs").value;
+  const fy = $("#fy").value, ff = $("#ff").value, fg = $("#fg").value, fs = $("#fs").value;
   let list = cache.filter(v => (
-    (!q || (v.title||'').toLowerCase().includes(q)) &&
-    (!fy || v.year >= +fy) &&
-    (!ff || v.fuel === ff) &&
-    (!fg || v.gearbox === fg)
+    (!q || (v.title||'').toLowerCase().includes(q)) && (!fy || v.year >= +fy) && (!ff || v.fuel === ff) && (!fg || v.gearbox === fg)
   ));
   switch(fs){
     case "price-asc":  list.sort((a,b)=> (a.price||0)-(b.price||0)); break;
@@ -229,8 +219,7 @@ function renderCatalog(){
 }
 
 function navDetalhe(id){
-  const v = cache.find(x => x.id == id);
-  if(!v) return false;
+  const v = cache.find(x => x.id == id); if(!v) return false;
   show("page-detalhe");
   const foto = (v.photos && v.photos[0]) || "https://placehold.co/1200x700?text=Sem+foto";
   $("#dt-foto").innerHTML = `<img src="${foto}" style="width:100%;height:100%;object-fit:cover">`;
@@ -258,7 +247,7 @@ async function interesse(id){
   return false;
 }
 
-// ===== ADMIN =====
+/* ========= ADMIN ========= */
 $("#send").onclick = async ()=>{
   const email = $("#email").value.trim();
   const { error } = await sb.auth.signInWithOtp({ email });
@@ -273,13 +262,8 @@ $("#logout").onclick = async ()=>{
 
 function setDealerWA(phoneRaw){
   const d = digits(phoneRaw);
-  if(d.length>=11){
-    dealerPhone = d;
-    $("#btnWA").href = WA(dealerPhone);
-  }else{
-    dealerPhone = DEALER_DEFAULT_PHONE;
-    $("#btnWA").href = WA(deALER_DEFAULT_PHONE);
-  }
+  dealerPhone = (d.length>=11) ? d : DEALER_DEFAULT_PHONE;
+  $("#btnWA").href = WA(dealerPhone);
 }
 
 async function bootstrapAdmin(session){
@@ -377,9 +361,11 @@ async function bootstrapAdmin(session){
   listAdmin();
 }
 
+/* ========= AUTH WIRING ========= */
 sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
 sb.auth.onAuthStateChange((_evt, s)=>{ if(s?.session){ bootstrapAdmin(s.session); } });
 
+/* ========= ROUTER ========= */
 function route(path){
   if(path==="estoque"){ show("page-estoque"); fetchVehicles(); return false; }
   if(path==="admin"){ show("page-admin"); return false; }
@@ -392,6 +378,7 @@ window.addEventListener("hashchange", ()=>{
   else { show("page-estoque"); }
 });
 
+/* ========= INIT ========= */
 document.getElementById("y").textContent = new Date().getFullYear();
 ["#q","#fy","#ff","#fg","#fs"].forEach(sel => document.querySelector(sel).addEventListener("input", debounce(renderCatalog,120)));
 sb.channel("rt").on("postgres_changes", { event:"*", schema:"public", table:"vehicle" }, fetchVehicles).subscribe();
@@ -402,8 +389,3 @@ fetchVehicles();
 </script>
 </body>
 </html>
-"""
-
-html = html.replace("__SUPABASE_URL__", SUPABASE_URL).replace("__SUPABASE_ANON__", SUPABASE_ANON)
-Path("/mnt/data/vitrine-pro.html").write_text(html, encoding="utf-8")
-"/mnt/data/vitrine-pro.html criado"
