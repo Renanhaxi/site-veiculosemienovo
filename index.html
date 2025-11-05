@@ -38,19 +38,30 @@
   @media(max-width:960px){.hero{grid-template-columns:1fr}}
   .stack{display:grid;gap:10px}
   .banner{border:1px dashed var(--line);border-radius:14px;padding:10px;text-align:center;color:#a9b6c3}
+  /* --- menu hambúrguer ------ */
+  .icon{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:#0f1624;display:grid;place-items:center;cursor:pointer}
+  .icon span{display:block;width:18px;height:2px;background:#dbe7f3;margin:2px 0;border-radius:2px}
+  .menu-panel{position:absolute;right:14px;top:60px;background:#0f1624;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:none;min-width:160px}
+  .menu-panel.open{display:block}
+  .menu-panel a{display:block;padding:10px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:#eaf2ff}
+  .menu-panel a:last-child{border-bottom:0}
+  /* --- WhatsApp flutuante --- */
+  .wa-fab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;color:#031b11;text-decoration:none;box-shadow:0 8px 24px rgba(37,211,102,.35);z-index:60}
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap" style="display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 0">
+  <div class="wrap" style="display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 0;position:relative">
     <div>
       <h1>Vitrine de Seminovos</h1>
       <div class="muted" style="font-size:13px">Catálogo conectado ao Supabase • Proposta rápida no WhatsApp</div>
     </div>
     <nav class="nav">
       <a class="btn soft" href="#/estoque" onclick="return route('estoque')">Estoque</a>
-      <a class="btn soft" href="#/admin" onclick="return route('admin')">Admin</a>
-      <a id="btnWA" class="btn primary" href="#" target="_blank" rel="noreferrer">WhatsApp</a>
+      <div class="icon" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></div>
+      <div class="menu-panel" id="menuPanel">
+        <a href="#/admin" onclick="return route('admin')">Admin</a>
+      </div>
     </nav>
   </div>
 </header>
@@ -137,24 +148,28 @@
   © <span id="y"></span> — Vitrine conectada ao Supabase. Dados e imagens meramente ilustrativos.
 </footer>
 
+<!-- WhatsApp flutuante -->
+<a id="btnWA" class="wa-fab" href="#" target="_blank" rel="noreferrer" aria-label="WhatsApp">WA</a>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ========= CONFIG ========= */
 const SUPABASE_URL  = "https://ikrzslkihibraaalenxp.supabase.co".trim();
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4".trim();
-if(!/^https?:\/\//i.test(SUPABASE_URL)){ console.error("SUPABASE_URL inválida:", SUPABASE_URL); }
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { persistSession: true, detectSessionInUrl: true, autoRefreshToken: true }
+});
 
-// WhatsApp padrão até carregar do dealer
 const DEALER_DEFAULT_PHONE = "5591XXXXXXXXX";
 const WA = (digits, t="Olá!") => "https://wa.me/" + digits + "?text=" + encodeURIComponent(t);
 
-/* ========= HELPERS ========= */
+/* ========= UI helpers ========= */
 const $ = (s, c=document) => c.querySelector(s);
 const BRL = (n) => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const digits = (s) => String(s||"").replace(/\D/g,"");
 const show = (id) => { ["page-estoque","page-detalhe","page-admin"].forEach(x => $("#"+x).classList.add("hide")); $("#"+id).classList.remove("hide"); };
 const debounce = (fn, ms=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+$("#menuBtn").onclick = () => $("#menuPanel").classList.toggle("open");
 
 /* ========= DEMO (fallback) ========= */
 const DEMO = [
@@ -250,7 +265,8 @@ async function interesse(id){
 /* ========= ADMIN ========= */
 $("#send").onclick = async ()=>{
   const email = $("#email").value.trim();
-  const { error } = await sb.auth.signInWithOtp({ email });
+  const redirect = location.origin + "/#/admin"; // volta direto pro admin
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirect } });
   if(error) alert(error.message); else alert("Confira seu e-mail e volte pelo link.");
 };
 
@@ -361,14 +377,25 @@ async function bootstrapAdmin(session){
   listAdmin();
 }
 
-/* ========= AUTH WIRING ========= */
-sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
-sb.auth.onAuthStateChange((_evt, s)=>{ if(s?.session){ bootstrapAdmin(s.session); } });
+/* ========= AUTH BOOT ========= */
+/* Se o link mágico voltar com ?code= ou token_hash, processamos e
+   substituímos a URL por #/admin para cair direto no painel. */
+(async ()=>{
+  const hasAuthParams = /[?#].*(code|token_hash)=/i.test(location.href);
+  if(hasAuthParams){
+    try{ await sb.auth.exchangeCodeForSession(window.location.href); }
+    catch(e){ console.warn("exchangeCodeForSession:", e?.message||e); }
+    history.replaceState({}, "", location.origin + location.pathname + "#/admin");
+  }
+  const { data } = await sb.auth.getSession();
+  if(data?.session) bootstrapAdmin(data.session);
+})();
+sb.auth.onAuthStateChange((evt, s)=>{ if(s?.user && evt==="SIGNED_IN"){ bootstrapAdmin(s); }});
 
 /* ========= ROUTER ========= */
 function route(path){
-  if(path==="estoque"){ show("page-estoque"); fetchVehicles(); return false; }
-  if(path==="admin"){ show("page-admin"); return false; }
+  if(path==="estoque"){ show("page-estoque"); fetchVehicles(); $("#menuPanel").classList.remove("open"); return false; }
+  if(path==="admin"){ show("page-admin"); $("#menuPanel").classList.remove("open"); return false; }
   return false;
 }
 window.addEventListener("hashchange", ()=>{
