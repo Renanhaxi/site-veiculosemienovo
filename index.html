@@ -136,13 +136,14 @@
 
   <!-- ADMIN -->
   <section id="page-admin" class="hide">
-    <!-- LOGIN -->
+    <!-- LOGIN (senha) -->
     <div id="adm-login" class="card pad">
       <h2>Admin • Acesso</h2>
-      <div class="muted" style="font-size:13px">Receba um link mágico no e-mail para gerenciar a vitrine.</div>
+      <div class="muted" style="font-size:13px">Entre com e-mail e senha (criados em Auth → Users).</div>
       <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
         <input id="adm-email" placeholder="seu@email">
-        <button id="adm-send" class="btn primary">Enviar link</button>
+        <input id="adm-pass" type="password" placeholder="senha">
+        <button id="adm-pwlogin" class="btn primary">Entrar</button>
       </div>
     </div>
 
@@ -177,7 +178,6 @@
 
         <div class="table" id="carsTable">
           <div class="row head"><div>Título</div><div>Preço</div><div>Ano</div><div>KM</div><div>Status</div><div>Destaque</div><div>Ações</div></div>
-          <!-- linhas via JS -->
         </div>
       </div>
 
@@ -227,10 +227,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ===================== CONFIG ===================== */
+/* ====== CONFIG ====== */
 const SUPABASE_URL  = "https://ikrzslkihibraaalenxp.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth:{ persistSession:true, detectSessionInUrl:true, autoRefreshToken:true }});
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth:{ persistSession:true, autoRefreshToken:true }});
 
 const DEALER_DEFAULT = { name:"Marcelo Macedo – Seminovos", city:"Belém/PA", whatsapp:"5591XXXXXXXXX", brand_color:"#25D366" };
 const WA = (digits, t="Olá! Tenho interesse no veículo.") => "https://wa.me/"+digits+"?text="+encodeURIComponent(t);
@@ -240,16 +240,16 @@ const digits = s => String(s||"").replace(/\D/g,"");
 const show = id => { ["page-estoque","page-detalhe","page-admin"].forEach(x=>$("#"+x).classList.add("hide")); $("#"+id).classList.remove("hide"); };
 const on = (el,ev,fn)=>el&&el.addEventListener(ev,fn);
 
-/* ===================== MENU & INIT ===================== */
+/* ====== UI & INIT ====== */
 on($("#menuBtn"),"click",()=>$("#menu").classList.toggle("open"));
 document.getElementById("y").textContent = new Date().getFullYear();
-let dealerId=null, dealer=null, dealerPhone=digits(DEALER_DEFAULT.whatsapp)||"5591XXXXXXXXX";
-function applyBrand(color){ document.documentElement.style.setProperty('--brand', color||DEALER_DEFAULT.brand_color); }
+let dealerId=null, dealer=null, dealerPhone="5591XXXXXXXXX";
+function applyBrand(color){ document.documentElement.style.setProperty('--brand', color||"#25D366"); }
 function setWA(phone){ const d=digits(phone); dealerPhone = d.length>=11?d:"5591XXXXXXXXX"; $("#wa").href = WA(dealerPhone); }
 
 show("page-estoque");
 
-/* ===================== CATALOGO (público) ===================== */
+/* ====== Catálogo público ====== */
 const DEMO = [
   { id:"d1", title:"Volkswagen Polo 1.0", year:2024, km:45806, gearbox:"Manual", fuel:"Flex", price:72990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=VW+Polo"] },
   { id:"d2", title:"Jeep Renegade Longitude 1.3", year:2024, km:45500, gearbox:"Automático", fuel:"Flex", price:111990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=Jeep+Renegade"] },
@@ -307,15 +307,14 @@ async function interesse(id){
 ["#q","#fy","#ff","#fg","#fs"].forEach(s=>on($(s),"input",()=>renderCatalog()));
 sb.channel("rt").on("postgres_changes",{event:"*",schema:"public",table:"vehicle"},fetchVehicles).subscribe();
 
-/* ===================== ADMIN (privado) ===================== */
-const tabs=["tDash","tCars","tLeads","tCfg"];
-function openTab(id){ tabs.forEach(t=>$("#"+t).classList.toggle("hide",t!==id)); }
-
-on($("#adm-send"),"click",async()=>{
-  const email=$("#adm-email").value.trim(); if(!email) return alert("Informe seu e-mail.");
-  const redirect=location.origin + "/#/admin";
-  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: redirect }});
-  if(error) alert(error.message); else alert("Link enviado. Abra seu e-mail e clique no link para entrar.");
+/* ====== Admin (e-mail + senha) ====== */
+on($("#adm-pwlogin"),"click",async()=>{
+  const email=$("#adm-email").value.trim();
+  const pass=$("#adm-pass").value;
+  if(!email||!pass) return alert("Preencha e-mail e senha.");
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if(error) return alert(error.message);
+  route("admin");
 });
 on($("#btnLogout"),"click",async()=>{ await sb.auth.signOut(); alert("Sessão encerrada."); route("estoque"); });
 
@@ -325,23 +324,14 @@ async function route(page){
     show("page-admin");
     const session = (await sb.auth.getSession()).data.session;
     if(!session){ $("#adm-login").classList.remove("hide"); $("#adm-app").classList.add("hide"); return false; }
-    await ensureDealer(session.user); $("#adm-login").classList.add("hide"); $("#adm-app").classList.remove("hide"); openTab("tDash"); renderAdmin(); return false;
-  } else {
-    show("page-estoque"); fetchVehicles(); return false;
-  }
+    await ensureDealer(session.user);
+    $("#adm-login").classList.add("hide"); $("#adm-app").classList.remove("hide");
+    openTab("tDash"); renderAdmin(); return false;
+  } else { show("page-estoque"); fetchVehicles(); return false; }
 }
-(async()=>{ // tratar retorno do link mágico
-  const hasAuth=/[?#].*(code|token_hash)=/i.test(location.href);
-  if(hasAuth){ try{ await sb.auth.exchangeCodeForSession(location.href); }catch(e){ console.warn(e?.message||e); }
-    history.replaceState({}, "", location.origin + location.pathname + "#/admin");
-  }
-  const { data } = await sb.auth.getSession();
-  if(data?.session) { await ensureDealer(data.session.user); }
-  fetchVehicles();
-})();
+(async()=>{ const { data } = await sb.auth.getSession(); if(data?.session) await ensureDealer(data.session.user); fetchVehicles(); })();
 
 async function ensureDealer(user){
-  // Checa membro; se não existir, cria dealer padrão (owner)
   let { data: mem } = await sb.from("dealer_member").select("dealer_id,role").eq("user_id",user.id).maybeSingle();
   if(!mem){
     const ins = await sb.from("dealer").insert({ name: DEALER_DEFAULT.name, city: DEALER_DEFAULT.city, whatsapp: DEALER_DEFAULT.whatsapp, brand_color: DEALER_DEFAULT.brand_color, created_by:user.id }).select("id,whatsapp,brand_color,name,city").single();
@@ -351,39 +341,28 @@ async function ensureDealer(user){
     dealer = ins.data;
   }
   dealerId = mem.dealer_id;
-  if(!dealer){
-    const dd = await sb.from("dealer").select("*").eq("id",dealerId).single();
-    dealer = dd.data;
-  }
-  // aplica branding
-  applyBrand(dealer.brand_color||DEALER_DEFAULT.brand_color);
-  setWA(dealer.whatsapp||DEALER_DEFAULT.whatsapp);
-  $("#dealerInfo").textContent = `${dealer.name||DEALER_DEFAULT.name} • ${(dealer.city||"")} • WhatsApp: ${dealer.whatsapp||""}`;
-  // bloqueia admin para não-owner (UI — RLS deve proteger no banco)
-  const role = mem.role||"seller";
-  if(role!=="owner"){ $("#adm-app").innerHTML = `<div class="card pad">Sem permissão para administrar esta vitrine.</div>`; }
+  if(!dealer){ const dd = await sb.from("dealer").select("*").eq("id",dealerId).single(); dealer = dd.data; }
+  applyBrand(dealer.brand_color||"#25D366"); setWA(dealer.whatsapp||"5591XXXXXXXXX");
+  $("#dealerInfo").textContent = `${dealer.name||""} • ${(dealer.city||"")} • WhatsApp: ${dealer.whatsapp||""}`;
+  if(mem.role!=="owner"){ $("#adm-app").innerHTML = `<div class="card pad">Sem permissão para administrar esta vitrine.</div>`; }
 }
 
-/* ========= Admin: dados ========= */
+/* ====== Admin: KPIs / Leads / Config ====== */
+const tabs=["tDash","tCars","tLeads","tCfg"]; function openTab(id){ tabs.forEach(t=>$("#"+t).classList.toggle("hide",t!==id)); }
+document.querySelectorAll(".tabs .btn").forEach(b=> b.addEventListener("click", ()=> openTab(b.dataset.tab)) );
+
 async function renderAdmin(){
-  // KPIs
   const { data: kc } = await sb.from("vehicle").select("status,destaque").eq("dealer_id", dealerId);
   $("#kAct").textContent = (kc||[]).filter(v=>v.status==="ativo").length;
   $("#kStar").textContent = (kc||[]).filter(v=>v.destaque).length;
-  const d30 = new Date(); d30.setDate(d30.getDate()-30);
+  const d30=new Date(); d30.setDate(d30.getDate()-30);
   const { data: kl } = await sb.from("lead").select("id").gte("created_at", d30.toISOString());
   $("#kLead").textContent = (kl||[]).length;
-
-  // Veículos
-  await loadCars();
-  // Leads
-  await loadLeads();
-  // Config
-  $("#cfgName").value = dealer.name||""; $("#cfgCity").value = dealer.city||""; $("#cfgWa").value = dealer.whatsapp||""; $("#cfgColor").value = dealer.brand_color||DEALER_DEFAULT.brand_color;
-  openTab("tDash");
+  await loadCars(); await loadLeads();
+  $("#cfgName").value = dealer.name||""; $("#cfgCity").value = dealer.city||""; $("#cfgWa").value = dealer.whatsapp||""; $("#cfgColor").value = dealer.brand_color||"#25D366";
 }
 
-/* ========= Veículos (CRUD) ========= */
+/* ====== Veículos (CRUD) ====== */
 on($("#newCar"),"click",async()=>{
   const title=prompt("Título (ex.: Polo 1.0 2024)"); if(!title) return;
   const price=+prompt("Preço (números)")||0, year=+prompt("Ano")||2024, km=+prompt("KM")||0;
@@ -431,7 +410,7 @@ async function loadCars(){
       if(act==="tog"){ const { data:v } = await sb.from("vehicle").select("status").eq("id",id).single(); await sb.from("vehicle").update({ status:(v.status==='ativo'?'pausado':'ativo')}).eq("id",id); loadCars(); }
       if(act==="star"){ const { data:v } = await sb.from("vehicle").select("destaque").eq("id",id).single(); await sb.from("vehicle").update({ destaque:!v.destaque}).eq("id",id); loadCars(); fetchVehicles(); }
       if(act==="edit"){ const { data:v } = await sb.from("vehicle").select("*").eq("id",id).single();
-        const title=prompt("Título", v.title); if(!title&&title!=="") return;
+        const title=prompt("Título", v.title); if(title==null) return;
         const price=+prompt("Preço", v.price); const year=+prompt("Ano",v.year); const km=+prompt("KM",v.km);
         await sb.from("vehicle").update({ title,price,year,km }).eq("id",id); loadCars();
       }
@@ -441,11 +420,9 @@ async function loadCars(){
   });
 }
 
-/* ========= Fotos: upload, substituir, remover, ordenar ========= */
+/* ====== Fotos: upload / substituir / remover / ordenar ====== */
 let currentVehicleId=null, photos=[];
-function openPhotos(id){
-  currentVehicleId=id; $("#over").classList.add("open"); loadPhotos();
-}
+function openPhotos(id){ currentVehicleId=id; $("#over").classList.add("open"); loadPhotos(); }
 on($("#btnCloseOver"),"click",()=>$("#over").classList.remove("open"));
 on($("#btnUpFoto"),"click",()=>{ const i=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"}); i.onchange=upPhoto; i.click(); });
 async function upPhoto(ev){
@@ -471,7 +448,6 @@ async function loadPhotos(){
         <button class="btn warn" data-rm="${i}">Remover</button>
         <button class="btn" data-top="${i}">Tornar capa</button>
       </div>`;
-    // drag
     el.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",i);});
     el.addEventListener("dragover",e=>e.preventDefault());
     el.addEventListener("drop",e=>{ e.preventDefault(); const from=+e.dataTransfer.getData("text/plain"); const to=+el.dataset.index; if(from===to) return; const it=photos.splice(from,1)[0]; photos.splice(to,0,it); renderTempOrder(); });
@@ -479,53 +455,34 @@ async function loadPhotos(){
   });
   wirePhotoButtons();
 }
-function renderTempOrder(){ // re-render grid with new order (preview)
-  const pg=$("#pg"); pg.querySelectorAll(".ph").forEach((el,i)=>{ el.dataset.index=i; el.querySelector(".tag").textContent = i===0?"Capa":"Foto "+(i+1); });
-}
+function renderTempOrder(){ $("#pg").querySelectorAll(".ph").forEach((el,i)=>{ el.dataset.index=i; el.querySelector(".tag").textContent = i===0?"Capa":"Foto "+(i+1); }); }
 function wirePhotoButtons(){
   $("#pg").querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{ const i=+b.dataset.rm; const p=photos[i]; await sb.from("vehicle_photo").delete().eq("id",p.id); loadPhotos(); });
   $("#pg").querySelectorAll("[data-top]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.top; const it=photos.splice(i,1)[0]; photos.unshift(it); renderTempOrder(); });
   $("#pg").querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.rp; const input=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"}); input.onchange=async(e)=>{ const f=e.target.files[0]; if(!f) return; const path = dealerId + "/" + currentVehicleId + "/" + Date.now() + "-" + f.name; const up=await sb.storage.from("car-photos").upload(path,f,{cacheControl:"3600",upsert:false}); if(up.error) return alert(up.error.message); const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl; await sb.from("vehicle_photo").update({ url }).eq("id", photos[i].id); loadPhotos(); }; input.click(); });
 }
-on($("#btnSaveOrder"),"click",async()=>{
-  await Promise.all(photos.map((p,idx)=> sb.from("vehicle_photo").update({ idx }).eq("id",p.id) ));
-  alert("Ordem salva!"); loadPhotos(); fetchVehicles();
-});
+on($("#btnSaveOrder"),"click",async()=>{ await Promise.all(photos.map((p,idx)=> sb.from("vehicle_photo").update({ idx }).eq("id",p.id) )); alert("Ordem salva!"); loadPhotos(); fetchVehicles(); });
 
-/* ========= Leads ========= */
+/* ====== Leads ====== */
 async function loadLeads(){
-  const { data } = await sb.rpc ? {} : await sb.from("lead_view").select("*"); // se existir view
-  let leads;
-  if(data){ leads=data; }
-  else{
-    const { data: raw } = await sb.from("lead").select("created_at,channel,vehicle_id,message").order("created_at",{ascending:false}).limit(100);
-    const ids=[...new Set((raw||[]).map(l=>l.vehicle_id))];
-    let names={}; if(ids.length){ const r=await sb.from("vehicle").select("id,title").in("id",ids); (r.data||[]).forEach(v=>names[v.id]=v.title); }
-    leads=(raw||[]).map(l=>({ when:new Date(l.created_at).toLocaleString("pt-BR"), channel:l.channel, vehicle:names[l.vehicle_id]||l.vehicle_id, message:l.message }));
-  }
+  const { data: raw } = await sb.from("lead").select("created_at,channel,vehicle_id,message").order("created_at",{ascending:false}).limit(100);
+  const ids=[...new Set((raw||[]).map(l=>l.vehicle_id))], names={};
+  if(ids.length){ const r=await sb.from("vehicle").select("id,title").in("id",ids); (r.data||[]).forEach(v=>names[v.id]=v.title); }
+  const leads=(raw||[]).map(l=>({ when:new Date(l.created_at).toLocaleString("pt-BR"), channel:l.channel, vehicle:names[l.vehicle_id]||l.vehicle_id, message:l.message }));
   const tbl=$("#leadsTable"); tbl.querySelectorAll(".row:not(.head)").forEach(e=>e.remove());
-  (leads||[]).forEach(L=>{
-    const r=document.createElement("div"); r.className="row"; r.style.gridTemplateColumns="1fr .9fr .7fr 2fr";
-    r.innerHTML=`<div>${L.when||new Date(L.created_at).toLocaleString("pt-BR")}</div><div>${L.channel||"-"}</div><div>${L.vehicle||"-"}</div><div>${L.message||"-"}</div>`;
-    tbl.appendChild(r);
-  });
+  leads.forEach(L=>{ const r=document.createElement("div"); r.className="row"; r.style.gridTemplateColumns="1fr .9fr .7fr 2fr";
+    r.innerHTML=`<div>${L.when}</div><div>${L.channel}</div><div>${L.vehicle}</div><div>${L.message}</div>`; tbl.appendChild(r); });
 }
 
-/* ========= Config ========= */
+/* ====== Config ====== */
 on($("#cfgSave"),"click",async()=>{
   const name=$("#cfgName").value.trim(), city=$("#cfgCity").value.trim(), whatsapp=$("#cfgWa").value.trim(), brand_color=$("#cfgColor").value;
   const { error } = await sb.from("dealer").update({ name, city, whatsapp, brand_color }).eq("id",dealerId);
   if(error) alert(error.message); else { dealer={...dealer,name,city,whatsapp,brand_color}; applyBrand(brand_color); setWA(whatsapp); alert("Salvo!"); $("#dealerInfo").textContent = `${dealer.name} • ${dealer.city} • WhatsApp: ${dealer.whatsapp}`; }
 });
 
-/* ========= Navegação das abas ========= */
-document.querySelectorAll(".tabs .btn").forEach(b=> b.addEventListener("click", ()=> openTab(b.dataset.tab)) );
-
-/* ========= Subscriptions ========= */
-sb.channel("adm_rt").on("postgres_changes",{event:"*",schema:"public",table:"vehicle_photo"},loadPhotos).subscribe();
-
-/* ========= Rota inicial ========= */
-function openAdminUI(){ show("page-admin"); $("#adm-login").classList.add("hide"); $("#adm-app").classList.remove("hide"); }
+/* ====== Subs ====== */
+sb.channel("rt_photos").on("postgres_changes",{event:"*",schema:"public",table:"vehicle_photo"},loadPhotos).subscribe();
 </script>
 </body>
 </html>
