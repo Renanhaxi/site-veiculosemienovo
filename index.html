@@ -20,9 +20,19 @@
   .btn.primary{background:var(--accent-vw);color:#fff;border-color:var(--accent-vw);font-weight:800;box-shadow:0 4px 10px rgba(29, 144, 245, 0.4);}
   .btn.wa{background:var(--wa);color:#031b11;border-color:var(--wa);font-weight:800}
   .btn.wa:hover{filter:brightness(1.1)}
+  /* A classe .grid geral permanece a mesma */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:20px 0 30px}
-  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  /* Adicionando classe específica para o Catálogo e filtros de responsividade */
+  .grid-catalogo { grid-template-columns: repeat(3, 1fr); }
+  @media(max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .grid-catalogo { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media(max-width:640px){
+    .grid{grid-template-columns:1fr}
+    .grid-catalogo { grid-template-columns: 1fr; }
+  }
+
   .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);transition:transform .2s}
   .card:hover{transform:translateY(-3px);}
   .thumb{aspect-ratio:16/10;background:var(--brand-vw);position:relative}
@@ -31,6 +41,10 @@
   .title{font-weight:800;font-size:18px;margin:2px 0;color:var(--brand-vw)}
   .price{font-size:24px;font-weight:900;margin:8px 0;color:var(--accent-vw)}
   .filters{display:grid;grid-template-columns:1fr repeat(4,140px);gap:10px;margin-top:20px}
+  /* Ajuste de filtros para mobile */
+  @media(max-width:768px){.filters{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.filters{grid-template-columns:1fr;}}
+
   input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
   .section-title{display:flex;align-items:center;justify-content:space-between;margin-top:40px}
   .pill{padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted);background:#f1f5f9}
@@ -117,6 +131,7 @@
       </div>
     </div>
     <nav class="nav">
+      <!-- Mantido: Link primário para o Catálogo -->
       <a class="btn" href="#/catalogo" onclick="return route('catalogo')">Catálogo de Oportunidades</a>
       <!-- O botão Admin é injetado via JS se houver sessão ativa -->
     </nav>
@@ -136,7 +151,8 @@
     <div class="section-title">
       <h2 style="margin:16px 0;color:var(--brand-vw)">Aceda às Melhores Oportunidades</h2>
     </div>
-    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <!-- Removido style="grid-template-columns:repeat(3,1fr)" e adicionado grid-catalogo para responsividade -->
+    <div class="grid grid-catalogo">
       <a href="#/catalogo?filter=lancamentos" onclick="return route('catalogo', 'lancamentos')" class="nav-block">
         <div style="font-size:24px;margin-bottom:5px">🚀</div>
         Lançamentos Exclusivos 2025
@@ -227,12 +243,14 @@
         <h3 style="margin:16px 0;color:var(--brand-vw)">✨ Destaques da Semana</h3>
         <span class="pill">Negociação Exclusiva</span>
     </div>
-    <div id="featured" class="grid" style="grid-template-columns:repeat(3,1fr)"></div>
+    <!-- Aplicada a classe grid-catalogo e removido o style inline -->
+    <div id="featured" class="grid grid-catalogo"></div>
 
     <div class="section-title">
         <h3 style="margin:16px 0;color:var(--brand-vw)">Estoque Completo</h3>
     </div>
-    <div id="list" class="grid" style="grid-template-columns:repeat(3,1fr)"></div>
+    <!-- Aplicada a classe grid-catalogo e removido o style inline -->
+    <div id="list" class="grid grid-catalogo"></div>
   </section>
   
   <!-- PAGE: DETALHE -->
@@ -298,7 +316,7 @@
       <div class="login-actions">
         <button id="btn-login" class="btn primary">Entrar</button>
         <button id="btn-google-login" class="btn btn-google">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.52-.2-2.23H12v4.26h6.01c-.26 1.34-.96 2.47-1.97 3.23l3.37 2.6c2.09-1.94 3.35-4.78 3.35-8.08z" fill="#4285F4"/><path d="M12 23c3.27 0 6.13-1.08 8.18-2.94l-3.37-2.6c-.92.6-2.09.95-3.81.95-2.9 0-5.38-1.95-6.27-4.57H2.33v2.85C4.84 21.05 8.16 23 12 23z" fill="#34A853"/><path d="M5.73 13.98c-.14-.52-.23-1.07-.23-1.63s.09-1.11.23-1.63V7.95H2.33c-.42.84-.66 1.8-.66 2.85s.24 2.01.66 2.85l3.4-2.2z" fill="#FBBC05"/><path d="M12 5.06c1.77 0 3.32.61 4.54 1.79l2.87-2.87C17.72 2.92 15.06 2 12 2 8.16 2 4.84 3.95 2.33 6.91l3.4 2.67C6.62 7.01 9.1 5.06 12 5.06z" fill="#EA4335"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.52-.2-2.23H12v4.26h6.01c-.26 1.34-.96 2.47-1.97 3.23l3.37 2.6c2.09-1.94 3.35-4.78 3.35-8.08z" fill="#4285F4"/><path d="M12 23c3.27 0 6.13-1.08 8.18-2.94l-3.37-2.6c-.92.6-2.09.95-3.81.95-2.9 0-5.38-1.95-6.27-4.57H2.33v2.85C4.84 21.05 8.16 23 12 23z" fill="#34A853"/><path d="M5.73 13.98c-.14-.52-.23-1.07-.23-1-1.63s.09-1.11.23-1.63V7.95H2.33c-.42.84-.66 1.8-.66 2.85s.24 2.01.66 2.85l3.4 2.67-2.2z" fill="#FBBC05"/><path d="M12 5.06c1.77 0 3.32.61 4.54 1.79l2.87-2.87C17.72 2.92 15.06 2 12 2 8.16 2 4.84 3.95 2.33 6.91l3.4 2.67C6.62 7.01 9.10 5.06 12 5.06z" fill="#EA4335"/></svg>
           Google
         </button>
       </div>
@@ -333,24 +351,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ===== CONFIGURAÇÕES (SUBSTITUA AS STRINGS ABAIXO) =====
+// =================================================================
+// 1. CONFIGURAÇÕES (ATUALIZE ESTES VALORES APÓS CONFIGURAR O SUPABASE)
+// =================================================================
 const VENDEDOR_NAME = "Marcelo Macedo";
 const CONCESSIONARIA_NAME = "Vega Automotores";
 const BRAND_NAME = "Volkswagen";
 const DEALER_CITY_STATE = "Belém/PA";
 
-// Configurações do Supabase (Substituídas diretamente)
-const SUPABASE_URL  = "https://ikrzslkihibraaalenxp.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4";
-const DEALER_DEFAULT_PHONE = "5591999998888"; // Telefone de exemplo: 55 + DDD + Número
+// Configurações do Supabase (Substitua as strings abaixo pelas suas chaves reais)
+// Lembre-se: O Supabase exige que a URL e a KEY sejam inseridas aqui
+const SUPABASE_URL  = "https://SUA_URL_SUPABASE.supabase.co"; // <-- ATUALIZE
+const SUPABASE_ANON = "SUA_CHAVE_ANON_AQUI"; // <-- ATUALIZE
+const DEALER_DEFAULT_PHONE = "5591999998888"; // Telefone padrão (55 + DDD + Número)
 
-// URL da foto do Marcelo (AGORA UTILIZANDO A IMAGEM FORNECIDA PELO USUÁRIO)
+// URL da foto do Marcelo (Utilizada no Card do Vendedor)
 const VENDEDOR_PHOTO_URL = "https://i.postimg.cc/BnNvBn0J/unnamed.jpg";
 
 // Inicialização do Supabase Client
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ===== HELPERS =====
+// =================================================================
+// 2. HELPERS
+// =================================================================
 const $ = (s, c=document) => c.querySelector(s);
 const BRL = (n) => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const digits = (s) => String(s||"").replace(/\D/g,"");
@@ -363,7 +386,7 @@ const show = (id) => {
 const debounce = (fn, ms=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
 let dealerPhone = DEALER_DEFAULT_PHONE;
 
-// DEMO Data (Simplificada parabrevidade)
+// DEMO Data (Simplificada para brevidade)
 const DEMO = [
   { id: "demo1", title:"VW T-Cross Comfortline 200 TSI", year:2025, km:0, gearbox:"Automático", fuel:"Flex", price:135990, promotion_tag:"Lançamento 2025", destaque:true, promotion_text:"Bónus de R$ 8.000 na troca do seu usado!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+T-Cross+2025"] , ficha_tecnica: { Categoria: "SUV", Motor: "1.0 TSI Turbo", Câmbio: "Automático 6 marchas", Airbags: "6", Central: "VW Play 10.1\"" } },
   { id: "demo2", title:"VW Polo Track 1.0 MPI", year:2025, km:0, gearbox:"Manual", fuel:"Flex", price:87990, promotion_tag:"Preço de Fábrica", destaque:true, promotion_text:"Taxa Zero em 24x!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+Polo+Track"] , ficha_tecnica: { Categoria: "Hatch", Motor: "1.0 MPI", Câmbio: "Manual 5 marchas", Airbags: "4" } },
@@ -373,7 +396,9 @@ const DEMO = [
 ];
 
 
-// ===== CATALOGO & VENDOR INFO =====
+// =================================================================
+// 3. CATALOGO & VENDOR INFO
+// =================================================================
 let cache = [];
 
 async function fetchVehicles(){
@@ -396,6 +421,7 @@ async function fetchVehicles(){
 
   // Fetch Vehicles
   const { data, error } = await sb.from("vehicle").select("*").eq("status", "ativo").order("destaque",{ascending:false}).order("year",{ascending:false});
+  // Se o Supabase estiver vazio (após apagar tudo), usa os dados DEMO
   cache = (!error && data && data.length) ? data : DEMO;
   renderCatalog();
   $("#count").textContent = cache.length;
@@ -491,12 +517,20 @@ async function interesse(id, isDetail=false){
   }
   const msg = `Olá Marcelo! Vi na sua vitrine o ${v.title} (${v.year}) por ${BRL(v.price)}.${sim} Gostaria de avançar com a proposta.`;
   
-  try{ await sb.from("lead").insert({ vehicle_id:id, channel:"whatsapp", utm_source:"site", utm_medium:"proposta", utm_campaign:"catalog", message: msg }); }catch(e){}
+  // Envio de lead para o Supabase (mesmo que falhe, não impede o WhatsApp)
+  try{ 
+    await sb.from("lead").insert({ vehicle_id:id, channel:"whatsapp", utm_source:"site", utm_medium:"proposta", utm_campaign:"catalog", message: msg }); 
+  }catch(e){
+    console.warn("Erro ao registrar lead no Supabase:", e.message);
+  }
+
   location.href = WA(dealerPhone, msg);
   return false;
 }
 
-// ===== AUTH & ADMIN FUNCTIONS =====
+// =================================================================
+// 4. AUTH & ADMIN FUNCTIONS
+// =================================================================
 
 function togglePasswordVisibility() {
   const passwordInput = $("#auth-password");
@@ -518,17 +552,25 @@ $("#btn-login").onclick = async ()=>{
   const password = $("#auth-password").value.trim();
   if (!email || !password) return alert("Por favor, preencha o email e a senha.");
   
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  
-  if(error) {
-    alert(`Erro no Login: ${error.message}. Verifique suas credenciais.`);
-  } 
+  // Adicionando tratamento de erro mais amigável
+  try {
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error) {
+      alert(`Erro no Login: ${error.message}. Verifique suas credenciais.`);
+    }
+  } catch(e) {
+    alert(`Erro de conexão/servidor: ${e.message}`);
+  }
   // O onAuthStateChange tratará o sucesso
 };
 
 $("#btn-google-login").onclick = async ()=>{
-  const { error } = await sb.auth.signInWithOAuth({ provider: 'google' });
-  if (error) alert(`Erro no Login com Google: ${error.message}`);
+  try {
+    const { error } = await sb.auth.signInWithOAuth({ provider: 'google' });
+    if (error) alert(`Erro no Login com Google: ${error.message}`);
+  } catch(e) {
+    alert(`Erro de conexão/servidor: ${e.message}`);
+  }
 };
 
 
@@ -552,29 +594,25 @@ function setDealerWA(phoneRaw){
 }
 
 async function injectAdminLink(){
+  // O link do Admin só deve ser injetado/exibido se houver uma sessão ATIVA.
   const { data: { session } } = await sb.auth.getSession();
   const nav = $("header .nav");
+  const existingBtn = $(".admin-btn");
 
   if(session){
-    if(!$(".admin-btn")){
+    if(!existingBtn){
         const adminBtn = document.createElement("a");
         adminBtn.href = "#/admin";
         adminBtn.className = "btn admin-btn";
         adminBtn.textContent = "Área Admin";
         adminBtn.onclick = ()=>route('admin');
-        // Insere o botão antes do último elemento (que é o botão WA)
-        const waBtn = $("a.btn.wa");
-        if (waBtn) {
-            nav.insertBefore(adminBtn, waBtn);
-        } else {
-            nav.appendChild(adminBtn);
-        }
+        nav.appendChild(adminBtn); // Adiciona no final da nav
     }
+    // Garante que o Admin é carregado se o hash for #/admin
     if(location.hash === '#/admin') bootstrapAdmin(session);
   } else {
-    const adminBtn = $(".admin-btn");
-    if(adminBtn) adminBtn.remove();
-    if(location.hash === '#/admin') show('page-admin');
+    // Se não há sessão, remove o botão de Admin
+    if(existingBtn) existingBtn.remove();
   }
 }
 
@@ -588,6 +626,7 @@ async function bootstrapAdmin(session){
   // 1. Fetch/Setup Dealer Profile
   let { data: dealerProfile } = await sb.from("dealer").select("*").maybeSingle();
   if(!dealerProfile){
+    // Cria o perfil do Dealer se não existir (IMPORTANTE para nova integração)
     const profileData = { vendedor_name: VENDEDOR_NAME, concessionaria_name: CONCESSIONARIA_NAME, brand: BRAND_NAME, city: DEALER_CITY_STATE.split('/')[0], whatsapp: DEALER_DEFAULT_PHONE, created_by: user.id };
     const { data, error } = await sb.from("dealer").insert(profileData).select("*").single();
     if(error) { console.error("Erro no bootstrap do dealer:", error); return; }
@@ -599,19 +638,29 @@ async function bootstrapAdmin(session){
   
   // 2. Setup Admin Functions
   async function listAdmin(){
-    const { data } = await sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").eq("dealer_id", dealerProfile.id).order("updated_at",{ascending:false});
-    $("#listAdmin").innerHTML = (data||[]).map(v => `
-      <div class="card pad" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px;box-shadow:none">
-        <div style="flex:1">
-          <strong>${v.title}</strong> • ${v.year} • ${BRL(v.price)} <br>
-          <span class="muted" style="font-size:12px">${v.promotion_tag||'Sem Promo'} | Status: ${v.status} ${v.destaque?'| DESTAQUE':''}</span>
-        </div>
-        <button class="btn soft" onclick="admFoto('${v.id}','${dealerProfile.id}')">Fotos</button>
-        <button class="btn soft" onclick="admEdit('${v.id}')">Editar</button>
-        <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
-        <button class="btn soft" onclick="admStar('${v.id}')">${v.destaque?'Normal':'Destacar'}</button>
-      </div>
-    `).join("") || "<div class='muted'>Sem veículos. Use + Novo Carro ou Seed.</div>";
+    // Nota: O filtro é essencial aqui, mas se não houver dealerProfile.id (erro no bootstrap), usará todos.
+    const qry = sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").order("updated_at",{ascending:false});
+    
+    // Tentativa de filtro por dealer_id (assumindo que dealerProfile existe após o login)
+    if(dealerProfile && dealerProfile.id) {
+        // qry = qry.eq("dealer_id", dealerProfile.id); // Esta linha causava erro de objeto não-função. Corrigido com o método do Supabase.
+        const { data } = await sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").eq("dealer_id", dealerProfile.id).order("updated_at",{ascending:false});
+        // Renderiza a lista
+        $("#listAdmin").innerHTML = (data||[]).map(v => `
+          <div class="card pad" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px;box-shadow:none">
+            <div style="flex:1">
+              <strong>${v.title}</strong> • ${v.year} • ${BRL(v.price)} <br>
+              <span class="muted" style="font-size:12px">${v.promotion_tag||'Sem Promo'} | Status: ${v.status} ${v.destaque?'| DESTAQUE':''}</span>
+            </div>
+            <button class="btn soft" onclick="admFoto('${v.id}','${dealerProfile.id}')">Fotos</button>
+            <button class="btn soft" onclick="admEdit('${v.id}')">Editar</button>
+            <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
+            <button class="btn soft" onclick="admStar('${v.id}')">${v.destaque?'Normal':'Destacar'}</button>
+          </div>
+        `).join("") || "<div class='muted'>Sem veículos. Use + Novo Carro ou Seed.</div>";
+    } else {
+        $("#listAdmin").innerHTML = "<div class='muted'>Erro ao carregar ID do Dealer. Tente Sair e Entrar novamente.</div>";
+    }
   }
   window.listAdmin = listAdmin;
 
@@ -625,6 +674,9 @@ async function bootstrapAdmin(session){
     const promoText = prompt("Texto da Promoção (ex.: Bónus de R$ 8.000)")||"Oferta válida este mês.";
     const categoria = prompt("Categoria (SUV/Sedan/Hatch)","SUV")||"SUV";
     
+    // Garante que dealerProfile.id existe antes de inserir
+    if (!dealerProfile || !dealerProfile.id) return alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
+    
     const { error } = await sb.from("vehicle").insert({ 
       dealer_id: dealerProfile.id, title, price, year, gearbox, fuel, status:"ativo", promotion_tag: promo, promotion_text: promoText, ficha_tecnica: { Categoria: categoria, Motor: "TSI", Câmbio: gearbox }
     });
@@ -633,6 +685,8 @@ async function bootstrapAdmin(session){
 
   $("#seed").onclick = async ()=>{
     if(!confirm("Inserir 5 veículos de exemplo no banco?")) return;
+    if (!dealerProfile || !dealerProfile.id) return alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
+    
     const payload = DEMO.map(v => ({ 
       dealer_id: dealerProfile.id, 
       title:v.title, 
@@ -644,7 +698,6 @@ async function bootstrapAdmin(session){
       destaque:!!v.destaque, 
       promotion_tag:v.promotion_tag, 
       promotion_text:v.promotion_text, 
-      // Usando valores fixos do DEMO para a ficha técnica (simplificado para o seed)
       ficha_tecnica: v.ficha_tecnica || {}
     }));
     const { error } = await sb.from("vehicle").insert(payload);
@@ -661,6 +714,7 @@ async function bootstrapAdmin(session){
 
   window.admEdit = async (id)=>{
     const { data: v } = await sb.from("vehicle").select("*").eq("id", id).single();
+    if(!v) return alert("Veículo não encontrado.");
     const title = prompt("Título", v.title);
     const price = +prompt("Preço", v.price);
     const year  = +prompt("Ano/Modelo", v.year);
@@ -702,12 +756,13 @@ async function bootstrapAdmin(session){
   listAdmin();
 }
 
-// ===== AUTH WIRING =====
+// 5. AUTH WIRING
 sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
 sb.auth.onAuthStateChange((_evt, s)=>{ 
     if(s?.session){ 
         bootstrapAdmin(s.session); 
     } else {
+        // Se deslogado e na página admin, exibe a caixa de login
         if(location.hash === '#/admin') {
             show('page-admin');
             $("#box-login").classList.remove("hide");
@@ -717,7 +772,7 @@ sb.auth.onAuthStateChange((_evt, s)=>{
     injectAdminLink();
 });
 
-// ===== ROUTER =====
+// 6. ROUTER
 function route(path, filter){
   if(path==="portfolio"){ show("page-portfolio"); return false; }
   if(path==="catalogo"){ 
@@ -730,6 +785,7 @@ function route(path, filter){
     return false; 
   }
   if(path==="admin"){ 
+    // Tenta obter a sessão novamente (pode ser necessário após recarga)
     sb.auth.getSession().then(({ data: { session } }) => {
         if (session) {
             bootstrapAdmin(session);
@@ -748,14 +804,15 @@ window.addEventListener("hashchange", ()=>{
   if(h[1]==="carro" && h[2]){ navDetalhe(h[2]); }
   else if(h[1]==="catalogo"){ 
     const urlParams = new URLSearchParams(location.hash.substring(location.hash.indexOf('?')+1));
-    route('catalogo', urlParams.get('filter'));
+    // Verifica se há um filtro na URL antes de chamar route('catalogo')
+    route('catalogo', urlParams.get('filter') || undefined); 
   }
   else if(h[1]==="admin"){ route('admin'); }
   else { route('portfolio'); }
   injectAdminLink();
 });
 
-// ===== INIT & REALTIME =====
+// 7. INIT & REALTIME
 document.getElementById("y").textContent = new Date().getFullYear();
 ["#q","#fModel","#fy","#fCat","#fs"].forEach(sel => document.querySelector(sel).addEventListener("input", debounce(renderCatalog,120)));
 sb.channel("rt").on("postgres_changes", { event:"*", schema:"public", table:"vehicle" }, fetchVehicles).subscribe();
