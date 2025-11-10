@@ -58,7 +58,9 @@
   @media(max-width:768px){.filters{grid-template-columns:1fr 1fr;}}
   @media(max-width:480px){.filters{grid-template-columns:1fr;}}
 
-  input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+  input,select,textarea{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.06);width:100%;}
+  textarea{resize:vertical;min-height:100px}
+  
   .section-title{display:flex;align-items:center;justify-content:space-between;margin-top:40px}
   .pill{padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted);background:#f1f5f9}
   footer{border-top:1px solid var(--line);color:var(--muted);padding:20px;margin-top:40px}
@@ -77,7 +79,7 @@
 
   /* AJUSTE MOBILE: HEADER (Empilha o logo e o texto se a tela for muito estreita) */
   @media(max-width: 480px) {
-    header .wrap > div:first-child { 
+    header .wrap > a:first-child { 
         flex-direction: column; 
         align-items: flex-start;
         gap: 0;
@@ -90,7 +92,6 @@
         align-items: center;
     }
   }
-
 
   /* Estilo da foto do vendedor */
   .vendedor-card {
@@ -118,7 +119,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
     min-height: 150px;
     padding: 20px;
     border: 1px solid var(--line);
@@ -152,11 +152,52 @@
   .login-actions .btn-google { background-color: #db4437; color: white; }
   .login-actions .btn-google:hover { background-color: #c33d32; }
   .login-actions .btn-google svg { margin-right: 8px; }
+  
+  /* ESTILOS DO NOVO MODAL DE ADMIN */
+  .modal-backdrop {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5); z-index: 1000;
+    display: flex; justify-content: center; align-items: center;
+    padding: 20px;
+  }
+  .modal-content {
+    background: var(--card); border-radius: 16px; padding: 30px;
+    max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+    box-shadow: var(--shadow);
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .modal-header button {
+    background: none; border: none; font-size: 24px; cursor: pointer; color: var(--muted);
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block; font-size: 14px; color: var(--muted); margin-bottom: 5px;
+  }
+  .checkbox-group {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: auto; margin: 0; transform: scale(1.2);
+  }
+  
+  /* LINHA DE SEGURANÇA FORÇADA: Garante que o modal esteja sempre invisível por padrão */
+  #edit-modal.modal-backdrop {
+    display: none !important; 
+  }
+  #edit-modal.modal-backdrop:not(.hide) {
+    display: flex !important; /* Força a exibição somente quando o JS remove a classe 'hide' */
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap" style="display:flex;align-items:center;gap:15px;justify-content:space-between;padding:10px 0">
+    <!-- HOME/TÍTULO -->
     <a href="#/portfolio" onclick="return route('portfolio')" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
       <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#002975" stroke-width="4"/><path d="M50 85L30 50L50 15L70 50L50 85Z" fill="#002975"/><path d="M50 80L35 50L50 20L65 50L50 80Z" fill="#fff"/><path d="M50 75L40 50L50 25L60 50L50 75Z" fill="#002975"/></svg>
       <div>
@@ -166,9 +207,12 @@
     </a>
     
     <nav class="nav">
+      <!-- Mantido: Link primário para o Catálogo -->
       <a class="btn" href="#/catalogo" onclick="return route('catalogo')">Catálogo de Oportunidades</a>
       
+      <!-- BOTÃO ICONE LOGIN/ADMIN -->
       <a class="btn icon-only admin-btn" id="loginAdminBtn" href="#/admin" onclick="return route('admin')">
+        <!-- Ícone de Usuário (substitui o texto) -->
         <svg id="login-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand-vw);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </a>
     </nav>
@@ -177,15 +221,18 @@
 
 <main class="wrap">
   
+  <!-- PAGE: PORTFÓLIO / CONSULTORIA (DEFAULT) -->
   <section id="page-portfolio">
     <div class="hero">
       <h2 style="font-size:clamp(26px,4vw,40px);margin-bottom:8px;color:var(--brand-vw)">O seu Volkswagen Zero, comprado de forma mais inteligente.</h2>
       <p style="font-size:clamp(18px,2vw,22px);color:var(--muted);max-width:800px;margin:0 auto">Evite os erros caros da compra. Receba a consultoria exclusiva de Marcelo Macedo e a segurança da Vega Automotores.</p>
     </div>
 
+    <!-- BLOCKS DE NAVEGAÇÃO RÁPIDA -->
     <div class="section-title">
       <h2 style="margin:16px 0;color:var(--brand-vw)">Aceda às Melhores Oportunidades</h2>
     </div>
+    <!-- Aplicada a classe grid-catalogo para responsividade -->
     <div class="grid grid-catalogo">
       <a href="#/catalogo?filter=lancamentos" onclick="return route('catalogo', 'lancamentos')" class="nav-block">
         <div style="font-size:24px;margin-bottom:5px">🚀</div>
@@ -201,6 +248,7 @@
       </a>
     </div>
 
+    <!-- JORNADA DE CONSULTORIA -->
     <div class="section-title">
         <h2 style="margin:16px 0;color:var(--brand-vw)">4 Etapas para a Certeza da Compra</h2>
     </div>
@@ -227,21 +275,25 @@
       </div>
     </div>
     
+    <!-- AUTHORIDADE -->
     <div class="dealer-info">
       <div id="concessionariaInfo">
         <h3>Vantagem Vega Automotores</h3>
         <p class="muted" id="bioConcessionaria">A Vega Automotores é líder em satisfação do cliente na região de Belém. Ao lado da Volkswagen, garantimos a você não apenas um carro zero, mas toda a segurança, garantia de fábrica e serviços de pós-venda que só uma concessionária oficial pode oferecer.</p>
+        <!-- KPIs da Concessionária -->
         <div class="kpi-container" id="concessionariaKpis">
           <div class="kpi"><div id="kpi-servicos">10+</div><span>Serviços de Pós-Venda</span></div>
           <div class="kpi"><div id="kpi-garantia">5 Anos</div><span>Garantia de Fábrica</span></div>
         </div>
       </div>
       
+      <!-- CARD DO VENDEDOR COM FOTO -->
       <div class="vendedor-card" id="vendedorCard">
         <img src="https://i.postimg.cc/BnNvBn0J/unnamed.jpg" alt="Marcelo Macedo - Consultor" class="vendedor-photo" id="vendedorPhoto" />
         <h3 style="margin-bottom:5px;margin-top:0">Marcelo Macedo</h3>
         <div class="muted" style="font-size:14px">Consultor Exclusivo VW</div>
         <p class="muted" id="bioVendedor" style="font-size:15px">A compra de um VW Zero não deve ser um risco. Eu simplifico o processo, negoceio as condições de fábrica por si e garanto que não deixará dinheiro na mesa ao dar o seu usado como entrada.</p>
+        <!-- KPIs do Vendedor -->
         <div class="kpi-container" id="vendedorKpis">
           <div class="kpi"><div id="kpi-clientes">1.500+</div><span>Clientes Satisfeitos</span></div>
           <div class="kpi"><div id="kpi-anos">10 Anos</div><span>De Experiência VW</span></div>
@@ -253,6 +305,7 @@
     </div>
   </section>
 
+  <!-- PAGE: CATÁLOGO DE OPORTUNIDADES -->
   <section id="page-catalogo" class="hide">
     <div class="section-title">
       <h2 style="margin:16px 0;color:var(--brand-vw)">Catálogo de Oportunidades Volkswagen</h2>
@@ -271,17 +324,21 @@
         <h3 style="margin:16px 0;color:var(--brand-vw)">✨ Destaques da Semana</h3>
         <span class="pill">Negociação Exclusiva</span>
     </div>
+    <!-- Aplicada a classe grid-catalogo e removido o style inline -->
     <div id="featured" class="grid grid-catalogo"></div>
 
     <div class="section-title">
         <h3 style="margin:16px 0;color:var(--brand-vw)">Estoque Completo</h3>
     </div>
+    <!-- Aplicada a classe grid-catalogo e removido o style inline -->
     <div id="list" class="grid grid-catalogo"></div>
   </section>
   
+  <!-- PAGE: DETALHE -->
   <section id="page-detalhe" class="hide">
     <div class="section-title">
         <h2 id="dt-title-main" style="margin:0;color:var(--brand-vw)"></h2>
+        <!-- Botão de voltar aprimorado -->
         <a href="#/catalogo" onclick="return route('catalogo')" class="btn soft">← Voltar para o Catálogo</a>
     </div>
     <div class="dealer-info" style="border:none;grid-template-columns:2fr 1fr;padding:10px 0;text-align:left">
@@ -318,7 +375,9 @@
     </div>
   </section>
 
+  <!-- PAGE: ADMIN -->
   <section id="page-admin" class="hide">
+    <!-- Botão de voltar aprimorado -->
     <a href="#/portfolio" onclick="return route('portfolio')" class="btn soft" style="margin-top:20px">← Voltar para a Home</a>
 
     <div id="box-login" class="login-card card">
@@ -350,10 +409,11 @@
       <div class="section-title" style="margin-top:6px;border-bottom:1px solid var(--line);padding-bottom:10px">
         <h2 id="dealerInfo">Carregando Informações...</h2>
         <div class="nav">
-          <button class="btn" id="newCar">+ Novo Carro</button>
-          <button class="btn" id="seed">Seed (6 Demos)</button>
-          <button class="btn" id="refresh">Atualizar</button>
-          <button class="btn" id="logout">Sair</button>
+          <!-- Novo Carro chama o novo modal -->
+          <button class="btn primary" id="newCar" onclick="openEditModal()">+ Novo Carro</button>
+          <button class="btn soft" id="seed">Seed (6 Demos)</button>
+          <button class="btn soft" id="refresh">Atualizar</button>
+          <button class="btn soft" id="logout">Sair</button>
         </div>
       </div>
       <div id="listAdmin" class="stack" style="margin-top:10px"></div>
@@ -361,6 +421,93 @@
   </section>
 
 </main>
+
+<div id="edit-modal" class="modal-backdrop hide">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title" style="margin:0;color:var(--brand-vw)">Novo Veículo</h3>
+            <button onclick="closeEditModal()">×</button>
+        </div>
+        
+        <form id="vehicle-form" onsubmit="return saveVehicle()">
+            <input type="hidden" id="v-id">
+            
+            <div class="form-group">
+                <label for="v-title">Título Completo (Modelo, Versão, Ano)</label>
+                <input id="v-title" type="text" placeholder="Ex: VW T-Cross Comfortline 200 TSI" required>
+            </div>
+            
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+                <div class="form-group">
+                    <label for="v-price">Preço (R$)</label>
+                    <input id="v-price" type="number" step="1000" placeholder="Ex: 135990" required>
+                </div>
+                <div class="form-group">
+                    <label for="v-year">Ano/Modelo</label>
+                    <input id="v-year" type="number" step="1" placeholder="Ex: 2025" required>
+                </div>
+            </div>
+            
+            <!-- PROMOÇÃO -->
+            <h4 style="margin-top:20px;color:var(--muted)">Informações de Promoção</h4>
+            <div class="form-group">
+                <label for="v-promo-tag">Tag de Destaque (Fica na Foto)</label>
+                <input id="v-promo-tag" type="text" placeholder="Ex: Taxa Zero, Lançamento 2025">
+            </div>
+            <div class="form-group">
+                <label for="v-promo-text">Texto da Promoção (Fica no Card)</label>
+                <textarea id="v-promo-text" placeholder="Ex: Bónus de R$ 8.000 na troca do seu usado!"></textarea>
+            </div>
+            
+            <!-- CHECKBOXES -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="v-destaque">
+                    <label for="v-destaque">Marcar como Destaque</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="v-ativo">
+                    <label for="v-ativo">Veículo Ativo (Visível no Catálogo)</label>
+                </div>
+            </div>
+
+            <!-- FICHA TÉCNICA (Inputs Simplificados) -->
+            <h4 style="margin-top:20px;color:var(--muted)">Ficha Técnica (Essencial)</h4>
+             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px">
+                <div class="form-group">
+                    <label for="v-category">Categoria</label>
+                    <select id="v-category">
+                        <option value="Hatch">Hatch</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Caminhonete">Caminhonete</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="v-gearbox">Câmbio</label>
+                    <select id="v-gearbox">
+                        <option value="Automático">Automático</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="v-fuel">Combustível</label>
+                    <select id="v-fuel">
+                        <option value="Flex">Flex</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Elétrico">Elétrico</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; display:flex; justify-content:flex-end; gap:10px">
+                <button type="button" class="btn soft" onclick="closeEditModal()">Cancelar</button>
+                <button type="submit" class="btn primary">Salvar Veículo</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="wa-float">
   <a id="waFloat" class="btn wa" href="#" target="_blank" rel="noreferrer" title="Falar com o seu Consultor">
@@ -393,6 +540,9 @@ const VENDEDOR_PHOTO_URL = "https://i.postimg.cc/BnNvBn0J/unnamed.jpg";
 
 // Inicialização do Supabase Client
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// Variável global para armazenar o perfil do Dealer após o login
+let DEALER_PROFILE = null; 
 
 // =================================================================
 // 2. HELPERS
@@ -662,59 +812,48 @@ async function bootstrapAdmin(session){
     dealerProfile = data;
   }
   
+  DEALER_PROFILE = dealerProfile; // Armazena o perfil globalmente
   $("#dealerInfo").textContent = `${dealerProfile.vendedor_name} (${dealerProfile.concessionaria_name}) • ${dealerProfile.whatsapp}`;
   setDealerWA(dealerProfile.whatsapp);
   
   // 2. Setup Admin Functions
   async function listAdmin(){
-    const qry = sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").order("updated_at",{ascending:false});
     
-    if(dealerProfile && dealerProfile.id) {
-        const { data } = await sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").eq("dealer_id", dealerProfile.id).order("updated_at",{ascending:false});
-        // Renderiza a lista
-        $("#listAdmin").innerHTML = (data||[]).map(v => `
-          <div class="card pad" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px;box-shadow:none">
-            <div style="flex:1">
-              <strong>${v.title}</strong> • ${v.year} • ${BRL(v.price)} <br>
-              <span class="muted" style="font-size:12px">${v.promotion_tag||'Sem Promo'} | Status: ${v.status} ${v.destaque?'| DESTAQUE':''}</span>
-            </div>
-            <button class="btn soft" onclick="admFoto('${v.id}','${dealerProfile.id}')">Fotos</button>
-            <button class="btn soft" onclick="admEdit('${v.id}')">Editar</button>
-            <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
-            <button class="btn soft" onclick="admStar('${v.id}')">${v.destaque?'Normal':'Destacar'}</button>
-          </div>
-        `).join("") || "<div class='muted'>Sem veículos. Use + Novo Carro ou Seed.</div>";
-    } else {
+    if(!DEALER_PROFILE || !DEALER_PROFILE.id) {
         $("#listAdmin").innerHTML = "<div class='muted'>Erro ao carregar ID do Dealer. Tente Sair e Entrar novamente.</div>";
+        return;
     }
+    
+    const { data } = await sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").eq("dealer_id", DEALER_PROFILE.id).order("updated_at",{ascending:false});
+    
+    // Renderiza a lista (mantido o layout anterior)
+    $("#listAdmin").innerHTML = (data||[]).map(v => `
+      <div class="card pad" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px;box-shadow:none">
+        <div style="flex:1">
+          <strong>${v.title}</strong> • ${v.year} • ${BRL(v.price)} <br>
+          <span class="muted" style="font-size:12px">${v.promotion_tag||'Sem Promo'} | Status: ${v.status} ${v.destaque?'| DESTAQUE':''}</span>
+        </div>
+        <button class="btn soft" onclick="admFoto('${v.id}','${DEALER_PROFILE.id}')">Fotos</button>
+        <!-- admEdit chama o novo modal -->
+        <button class="btn soft" onclick="openEditModal('${v.id}')">Editar</button> 
+        <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
+        <button class="btn soft" onclick="admStar('${v.id}')">${v.destaque?'Normal':'Destacar'}</button>
+      </div>
+    `).join("") || "<div class='muted'>Sem veículos. Use + Novo Carro ou Seed.</div>";
   }
   window.listAdmin = listAdmin;
+  
+  // NEW: Novo Carro agora chama o modal vazio
+  $("#newCar").onclick = () => openEditModal(); 
+  window.openEditModal = openEditModal; // Expõe a função para ser usada pelo onclick nos cartões
 
-  $("#newCar").onclick = async ()=>{
-    const title   = prompt("Título Completo (ex.: T-Cross Comfortline 200 TSI)"); if(!title) return;
-    const price   = +prompt("Preço (números)")||0;
-    const year    = +prompt("Ano/Modelo")||new Date().getFullYear();
-    const gearbox = prompt("Câmbio (Automático/Manual)","Automático")||"Automático";
-    const fuel    = prompt("Combustível (Flex/Diesel/Elétrico)","Flex")||"Flex";
-    const promo   = prompt("Tag de Promoção (ex.: Taxa Zero)")||"Oportunidade";
-    const promoText = prompt("Texto da Promoção (ex.: Bónus de R$ 8.000)")||"Oferta válida este mês.";
-    const categoria = prompt("Categoria (SUV/Sedan/Hatch)","SUV")||"SUV";
-    
-    // Garante que dealerProfile.id existe antes de inserir
-    if (!dealerProfile || !dealerProfile.id) return alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
-    
-    const { error } = await sb.from("vehicle").insert({ 
-      dealer_id: dealerProfile.id, title, price, year, gearbox, fuel, status:"ativo", promotion_tag: promo, promotion_text: promoText, ficha_tecnica: { Categoria: categoria, Motor: "TSI", Câmbio: gearbox }
-    });
-    if(error) alert("Erro ao criar carro: "+error.message); else listAdmin();
-  };
-
+  // Funções administrativas restantes (mantidas)
   $("#seed").onclick = async ()=>{
     if(!confirm("Inserir 5 veículos de exemplo no banco?")) return;
-    if (!dealerProfile || !dealerProfile.id) return alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
+    if (!DEALER_PROFILE || !DEALER_PROFILE.id) return alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
     
     const payload = DEMO.map(v => ({ 
-      dealer_id: dealerProfile.id, 
+      dealer_id: DEALER_PROFILE.id, 
       title:v.title, 
       year:v.year, 
       price:v.price, 
@@ -727,32 +866,27 @@ async function bootstrapAdmin(session){
       ficha_tecnica: v.ficha_tecnica || {}
     }));
     const { error } = await sb.from("vehicle").insert(payload);
-    if(error) alert("Erro ao inserir Seed: "+error.message); else listAdmin();
+    if(error) alert(`Erro ao inserir Seed: ${error.message}`); else listAdmin();
   };
 
   $("#refresh").onclick = ()=> listAdmin();
 
   window.admToggle = async (id)=>{
-    const { data: v } = await sb.from("vehicle").select("status").eq("id", id).single();
-    await sb.from("vehicle").update({ status: (v.status==='ativo'?'pausado':'ativo') }).eq("id", id);
+    const { data: v, error } = await sb.from("vehicle").select("status").eq("id", id).single();
+    if (error) return alert(`Erro ao buscar status: ${error.message}`);
+    const { error: updateError } = await sb.from("vehicle").update({ status: (v.status==='ativo'?'pausado':'ativo') }).eq("id", id);
+    if (updateError) return alert(`Erro ao atualizar status: ${updateError.message}`);
     listAdmin(); fetchVehicles();
   };
-
-  window.admEdit = async (id)=>{
-    const { data: v } = await sb.from("vehicle").select("*").eq("id", id).single();
-    if(!v) return alert("Veículo não encontrado.");
-    const title = prompt("Título", v.title);
-    const price = +prompt("Preço", v.price);
-    const year  = +prompt("Ano/Modelo", v.year);
-    const promo   = prompt("Tag de Promoção", v.promotion_tag);
-    const promoText = prompt("Texto da Promoção", v.promotion_text);
-    await sb.from("vehicle").update({ title, price, year, promotion_tag: promo, promotion_text: promoText }).eq("id", id);
-    listAdmin();
-  };
+  
+  // Antiga admEdit removida e substituída por openEditModal
+  window.admEdit = openEditModal;
 
   window.admStar = async (id)=>{
-    const { data: v } = await sb.from("vehicle").select("destaque").eq("id", id).single();
-    await sb.from("vehicle").update({ destaque: !v.destaque }).eq("id", id);
+    const { data: v, error } = await sb.from("vehicle").select("destaque").eq("id", id).single();
+    if (error) return alert(`Erro ao buscar destaque: ${error.message}`);
+    const { error: updateError } = await sb.from("vehicle").update({ destaque: !v.destaque }).eq("id", id);
+    if (updateError) return alert(`Erro ao atualizar destaque: ${updateError.message}`);
     listAdmin(); fetchVehicles();
   };
 
@@ -767,14 +901,16 @@ async function bootstrapAdmin(session){
           const file = input.files[i];
           const path = `photos/${dealerId}/${id}/${Date.now()}-${file.name}`;
           const up = await sb.storage.from("car-photos").upload(path, file, { cacheControl:"3600", upsert:false });
-          if(up.error) { console.error(up.error.message); alert("Erro ao enviar foto: "+up.error.message); continue; }
+          if(up.error) { console.error(up.error.message); alert(`Erro ao enviar foto: ${up.error.message}`); continue; }
           
-          const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl;
+          const { data: publicData } = sb.storage.from("car-photos").getPublicUrl(path);
+          const url = publicData.publicUrl;
           existingPhotos.push(url);
       }
       
-      await sb.from("vehicle").update({ photos: existingPhotos }).eq("id", id);
-      alert(`${input.files.length} foto(s) enviada(s)!`);
+      const { error } = await sb.from("vehicle").update({ photos: existingPhotos }).eq("id", id);
+      if (error) alert(`Erro ao salvar links das fotos: ${error.message}`);
+      else alert(`${input.files.length} foto(s) enviada(s)!`);
       listAdmin();
     };
     input.click();
@@ -782,7 +918,132 @@ async function bootstrapAdmin(session){
   listAdmin();
 }
 
-// 5. AUTH WIRING
+// =================================================================
+// 5. FUNÇÕES DO NOVO MODAL DE EDIÇÃO/CRIAÇÃO
+// =================================================================
+
+function closeEditModal() {
+    $("#edit-modal").classList.add("hide");
+    // Reseta o formulário
+    $("#vehicle-form").reset();
+    $("#v-id").value = '';
+}
+window.closeEditModal = closeEditModal;
+
+async function openEditModal(id = null) {
+    if (!DEALER_PROFILE) {
+        alert("Erro: Perfil do consultor não carregado. Tente fazer login novamente.");
+        return;
+    }
+    
+    // 1. Configura o modal para edição ou criação
+    if (id) {
+        $("#modal-title").textContent = "Editar Veículo";
+        // Busca os dados do veículo no cache
+        const v = cache.find(x => x.id === id);
+        if (!v) {
+            alert("Veículo não encontrado no cache.");
+            return;
+        }
+        
+        // 2. Preenche os campos do formulário
+        $("#v-id").value = v.id;
+        $("#v-title").value = v.title || '';
+        $("#v-price").value = v.price || '';
+        $("#v-year").value = v.year || new Date().getFullYear();
+        $("#v-promo-tag").value = v.promotion_tag || '';
+        $("#v-promo-text").value = v.promotion_text || '';
+        $("#v-destaque").checked = !!v.destaque;
+        $("#v-ativo").checked = v.status === 'ativo';
+        
+        // Ficha Técnica (com fallback)
+        $("#v-category").value = v.ficha_tecnica?.Categoria || v.ficha_tecnica?.Categoria || 'Hatch';
+        $("#v-gearbox").value = v.ficha_tecnica?.Câmbio || v.gearbox || 'Automático';
+        $("#v-fuel").value = v.fuel || 'Flex';
+        
+    } else {
+        $("#modal-title").textContent = "Novo Veículo";
+        $("#v-id").value = ''; // Garante que o ID esteja vazio para a criação
+        $("#v-ativo").checked = true; // Novo carro começa como ativo
+    }
+    
+    // LINHA QUE MOSTRA O MODAL
+    $("#edit-modal").classList.remove("hide"); 
+}
+window.openEditModal = openEditModal;
+
+async function saveVehicle() {
+    // 1. Coleta os dados do formulário
+    const id = $("#v-id").value;
+    const title = $("#v-title").value.trim();
+    const price = +$("#v-price").value;
+    const year = +$("#v-year").value;
+    const promo_tag = $("#v-promo-tag").value.trim();
+    const promo_text = $("#v-promo-text").value.trim();
+    const destaque = $("#v-destaque").checked;
+    const status = $("#v-ativo").checked ? 'ativo' : 'pausado';
+    
+    const category = $("#v-category").value;
+    const gearbox = $("#v-gearbox").value;
+    const fuel = $("#v-fuel").value;
+    
+    if (!title || !price || !year) {
+        alert("Título, Preço e Ano são obrigatórios.");
+        return false;
+    }
+
+    const payload = {
+        title,
+        price,
+        year,
+        gearbox,
+        fuel,
+        status,
+        destaque,
+        promotion_tag: promo_tag,
+        promotion_text: promo_text,
+        ficha_tecnica: {
+            Categoria: category,
+            Câmbio: gearbox,
+            Motor: "TSI", // Padrão
+            Airbags: "6"  // Padrão
+        }
+    };
+    
+    let error;
+
+    if (id) {
+        // Edição (UPDATE)
+        const result = await sb.from("vehicle").update(payload).eq("id", id);
+        error = result.error;
+    } else {
+        // Criação (INSERT)
+        if (!DEALER_PROFILE || !DEALER_PROFILE.id) {
+            alert("Erro: ID do Dealer não encontrado. Faça login novamente.");
+            return false;
+        }
+        payload.dealer_id = DEALER_PROFILE.id;
+        const result = await sb.from("vehicle").insert(payload);
+        error = result.error;
+    }
+
+    if (error) {
+        alert(`Erro ao salvar veículo: ${error.message}`);
+        return false;
+    }
+
+    // 2. Fecha o modal e atualiza as listas
+    closeEditModal();
+    listAdmin(); 
+    fetchVehicles(); // Atualiza o catálogo público
+    
+    return false; // Previne o envio padrão do formulário
+}
+window.saveVehicle = saveVehicle;
+
+// =================================================================
+// 6. AUTH WIRING
+// =================================================================
 sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
 sb.auth.onAuthStateChange((_evt, s)=>{ 
     if(s?.session){ 
@@ -798,7 +1059,7 @@ sb.auth.onAuthStateChange((_evt, s)=>{
     injectAdminLink();
 });
 
-// 6. ROUTER
+// 7. ROUTER
 function route(path, filter){
   if(path==="portfolio"){ show("page-portfolio"); return false; }
   if(path==="catalogo"){ 
@@ -838,10 +1099,13 @@ window.addEventListener("hashchange", ()=>{
   injectAdminLink();
 });
 
-// 7. INIT & REALTIME
+// 8. INIT & REALTIME
 document.getElementById("y").textContent = new Date().getFullYear();
 ["#q","#fModel","#fy","#fCat","#fs"].forEach(sel => document.querySelector(sel).addEventListener("input", debounce(renderCatalog,120)));
 sb.channel("rt").on("postgres_changes", { event:"*", schema:"public", table:"vehicle" }, fetchVehicles).subscribe();
+
+// LINHA DE SEGURANÇA ADICIONADA: Garante que o modal está invisível ao carregar
+$("#edit-modal").classList.add("hide"); 
 
 // Redireciona para a rota correta ao carregar a página
 if(location.hash){ window.dispatchEvent(new Event('hashchange')); }
