@@ -3,486 +3,769 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Marcelo Macedo • Vitrine de Seminovos</title>
-<meta name="description" content="Vitrine de seminovos com proposta rápida no WhatsApp e painel administrativo completo.">
+<title>Marcelo Macedo • Consultor Volkswagen • Vega Automotores</title>
+<meta name="description" content="O seu Volkswagen Zero, comprado de forma mais inteligente. Consultoria exclusiva na Vega Automotores, Belém/PA."/>
 <link rel="icon" href="data:,">
 <style>
-  :root{
-    --bg:#0b1220; --card:#0f172a; --line:rgba(255,255,255,.10);
-    --muted:#9aa6b2; --text:#eaf2ff; --brand:#25D366; --brand-ink:#032313;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto}
+  /* Tema Claro e Cores VW */
+  :root{--bg:#f8fafc;--card:#ffffff;--line:rgba(0,0,0,.10);--muted:#64748b;--text:#1e293b;--brand-vw:#002975;--accent-vw:#1D90F5;--wa:#25D366;--shadow:0 4px 12px rgba(0,0,0,.08);}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu}
   .wrap{max-width:1200px;margin:0 auto;padding:0 14px}
-  header{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(2,6,23,.94),rgba(2,6,23,.75));border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
-  h1{font-size:clamp(18px,3vw,24px);margin:8px 0}
+  header{position:sticky;top:0;z-index:50;background:var(--card);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:var(--shadow);}
+  h1{font-size:clamp(20px,3vw,26px);margin:10px 0;color:var(--brand-vw)}
   .muted{color:var(--muted)}
-  .btn{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#101a2c;color:#eaf2ff;text-decoration:none;cursor:pointer;user-select:none}
-  .btn.primary{background:var(--brand);color:var(--brand-ink);border-color:transparent;font-weight:800}
-  .btn.ghost{background:transparent}
-  .btn.warn{background:#2a100f;border-color:#5f1d1b}
-  .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 22px}
+  .nav{display:flex;gap:10px;align-items:center}
+  .btn,.chip{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);text-decoration:none;cursor:pointer;font-weight:600;transition:all .2s;box-shadow:var(--shadow)}
+  .btn:hover{background:#f1f5f9;border-color:var(--brand-vw)}
+  .btn.primary{background:var(--accent-vw);color:#fff;border-color:var(--accent-vw);font-weight:800;box-shadow:0 4px 10px rgba(29, 144, 245, 0.4);}
+  .btn.wa{background:var(--wa);color:#031b11;border-color:var(--wa);font-weight:800}
+  .btn.wa:hover{filter:brightness(1.1)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:20px 0 30px}
   @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:640px){.grid{grid-template-columns:1fr}}
-  .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02))}
-  .thumb{aspect-ratio:16/10;background:#0a1324}
+  .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);transition:transform .2s}
+  .card:hover{transform:translateY(-3px);}
+  .thumb{aspect-ratio:16/10;background:var(--brand-vw);position:relative}
   .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .pad{padding:12px}
-  .title{font-weight:800;margin:2px 0}
-  .meta{font-size:13px;color:var(--muted)}
-  .price{font-size:20px;font-weight:900;margin:8px 0}
-  .filters{display:grid;grid-template-columns:1fr 130px 150px 150px 170px;gap:10px;margin-top:12px}
-  input,select{padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1624;color:#eaf2ff}
-  .section-title{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
-  .hero{display:grid;grid-template-columns:1fr 360px;gap:16px}
-  @media(max-width:960px){.hero{grid-template-columns:1fr}}
-  .stack{display:grid;gap:10px}
-  footer{border-top:1px solid var(--line);color:#b7c3cf;padding:16px;margin-top:20px}
+  .pad{padding:16px}
+  .title{font-weight:800;font-size:18px;margin:2px 0;color:var(--brand-vw)}
+  .price{font-size:24px;font-weight:900;margin:8px 0;color:var(--accent-vw)}
+  .filters{display:grid;grid-template-columns:1fr repeat(4,140px);gap:10px;margin-top:20px}
+  input,select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+  .section-title{display:flex;align-items:center;justify-content:space-between;margin-top:40px}
+  .pill{padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted);background:#f1f5f9}
+  footer{border-top:1px solid var(--line);color:var(--muted);padding:20px;margin-top:40px}
   .hide{display:none}
-  /* menu */
-  .icon{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:#0f1624;display:grid;place-items:center;cursor:pointer}
-  .icon span{display:block;width:18px;height:2px;background:#e6f0ff;margin:2px 0;border-radius:2px}
-  .menu{position:absolute;right:14px;top:60px;background:#0f1624;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:none;min-width:170px}
-  .menu.open{display:block}
-  .menu a, .menu button{display:block;width:100%;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:transparent;color:#eaf2ff;text-decoration:none}
-  .menu a:last-child, .menu button:last-child{border-bottom:0}
-  /* admin */
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  @media(max-width:640px){.kpi{grid-template-columns:1fr}}
-  .kpi .card{padding:12px}
-  .table{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .row{display:grid;grid-template-columns:1.5fr .6fr .4fr .5fr .6fr .8fr .9fr;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:10px}
-  .row.head{background:#0f1624;color:#cfe2ff;font-weight:700}
-  .row:last-child{border-bottom:0}
-  .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  @media(max-width:900px){.photo-grid{grid-template-columns:repeat(2,1fr)}}
-  .ph{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#091327}
-  .ph img{width:100%;height:150px;object-fit:cover;display:block}
-  .ph .bar{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5));padding:6px;display:flex;gap:6px;justify-content:flex-end}
-  .ph .tag{position:absolute;left:6px;top:6px;background:#0007;color:#fff;padding:2px 6px;border-radius:999px;font-size:11px}
-  .over{position:fixed;inset:0;background:rgba(1,5,20,.7);display:none;place-items:center;z-index:90}
-  .over.open{display:grid}
-  .panel{width:min(920px,90vw);max-height:90vh;overflow:auto;background:#0c1529;border:1px solid var(--line);border-radius:16px;padding:14px}
-  /* WA flutuante */
-  .wa{position:fixed;right:16px;bottom:16px;width:56px;height:56px;border-radius:999px;background:var(--brand);color:var(--brand-ink);display:flex;align-items:center;justify-content:center;font-weight:900;text-decoration:none;box-shadow:0 8px 24px rgba(37,211,102,.35);z-index:70}
+  .hero{padding:40px 0;text-align:center;background:#e2e8f0;border-radius:16px;margin-top:20px}
+  .dealer-info{display:grid;grid-template-columns:2fr 1fr;gap:30px;padding:30px 0;margin-top:20px;border-top:1px solid var(--line);text-align:left}
+  @media(max-width:960px){.dealer-info{grid-template-columns:1fr}}
+  .dealer-info h3{color:var(--brand-vw);margin-top:0}
+  .kpi-container{display:flex;gap:15px;margin-top:10px}
+  .kpi div{font-size:24px;font-weight:900;color:var(--accent-vw)}
+  .kpi span{font-size:12px;color:var(--muted)}
+  .wa-float{position:fixed;bottom:20px;right:20px;z-index:100}
+  /* Estilo da foto do vendedor */
+  .vendedor-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+  }
+  .vendedor-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 4px solid var(--accent-vw);
+  }
+  /* Estilo dos blocos de navegação */
+  .nav-block{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 150px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: var(--brand-vw);
+    transition: all .2s;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .nav-block:hover{
+    background: var(--brand-vw);
+    color: var(--card);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Estilos específicos do Login */
+  .login-card { max-width: 400px; margin: 50px auto; padding: 30px; text-align: left; }
+  .input-group { position: relative; margin-bottom: 15px; }
+  .input-group input { width: 100%; }
+  .input-group .toggle-password { 
+    position: absolute; right: 10px; top: 50%; 
+    transform: translateY(-50%); 
+    cursor: pointer; 
+    color: var(--muted);
+    background: none;
+    border: none;
+    padding: 5px;
+  }
+  .login-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .login-actions .btn-google { background-color: #db4437; color: white; }
+  .login-actions .btn-google:hover { background-color: #c33d32; }
+  .login-actions .btn-google svg { margin-right: 8px; }
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap" style="display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 0;position:relative">
-    <div>
-      <h1>Marcelo Macedo • Vitrine de Seminovos</h1>
-      <div class="muted" style="font-size:13px">Catálogo conectado ao Supabase • Proposta rápida no WhatsApp</div>
-    </div>
-    <nav style="display:flex;gap:10px;align-items:center">
-      <a class="btn" href="#/estoque" onclick="return route('estoque')">Estoque</a>
-      <div class="icon" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></div>
-      <div class="menu" id="menu">
-        <a href="#/admin" onclick="return route('admin')">Admin</a>
-        <button id="btnLogout">Sair</button>
+  <div class="wrap" style="display:flex;align-items:center;gap:15px;justify-content:space-between;padding:10px 0">
+    <div style="display:flex;align-items:center;gap:10px">
+      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#002975" stroke-width="4"/><path d="M50 85L30 50L50 15L70 50L50 85Z" fill="#002975"/><path d="M50 80L35 50L50 20L65 50L50 80Z" fill="#fff"/><path d="M50 75L40 50L50 25L60 50L50 75Z" fill="#002975"/></svg>
+      <div>
+        <h1>Marcelo Macedo: Consultor Volkswagen</h1>
+        <div class="muted" id="dealerLocation" style="font-size:13px">Vega Automotores • Belém/PA</div>
       </div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="#/catalogo" onclick="return route('catalogo')">Catálogo de Oportunidades</a>
+      <!-- O botão Admin é injetado via JS se houver sessão ativa -->
     </nav>
   </div>
 </header>
 
 <main class="wrap">
-  <!-- ESTOQUE / HOME -->
-  <section id="page-estoque">
-    <div class="filters">
-      <input id="q" type="search" placeholder="Buscar por modelo/marca…">
-      <select id="fy"><option value="">Ano min.</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select>
-      <select id="ff"><option value="">Combustível</option><option>Flex</option><option>Gasolina</option><option>Diesel</option><option>Híbrido</option><option>Elétrico</option></select>
-      <select id="fg"><option value="">Câmbio</option><option>Automático</option><option>Manual</option></select>
-      <select id="fs"><option value="recent">Mais recentes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="km-asc">Menor KM</option></select>
-    </div>
-    <div class="section-title">
-      <h2 style="margin:12px 0">Ofertas em destaque</h2>
-      <span class="chip">Atualiza em tempo real</span>
-    </div>
-    <div id="featured" class="grid"></div>
-
-    <div class="section-title">
-      <h2 style="margin:12px 0">Estoque completo</h2>
-      <span class="chip"><span id="count">0</span> veículos</span>
-    </div>
-    <div id="list" class="grid"></div>
-  </section>
-
-  <!-- DETALHE -->
-  <section id="page-detalhe" class="hide">
+  
+  <!-- PAGE: PORTFÓLIO / CONSULTORIA (DEFAULT) -->
+  <section id="page-portfolio">
     <div class="hero">
-      <div class="card">
-        <div class="thumb" id="dt-foto"></div>
-        <div class="pad stack">
-          <div class="title" id="dt-title"></div>
-          <div class="meta" id="dt-meta"></div>
-          <div class="price" id="dt-price"></div>
+      <h2 style="font-size:clamp(26px,4vw,40px);margin-bottom:8px;color:var(--brand-vw)">O seu Volkswagen Zero, comprado de forma mais inteligente.</h2>
+      <p style="font-size:clamp(18px,2vw,22px);color:var(--muted);max-width:800px;margin:0 auto">Evite os erros caros da compra. Receba a consultoria exclusiva de Marcelo Macedo e a segurança da Vega Automotores.</p>
+    </div>
+
+    <!-- BLOCKS DE NAVEGAÇÃO RÁPIDA -->
+    <div class="section-title">
+      <h2 style="margin:16px 0;color:var(--brand-vw)">Aceda às Melhores Oportunidades</h2>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+      <a href="#/catalogo?filter=lancamentos" onclick="return route('catalogo', 'lancamentos')" class="nav-block">
+        <div style="font-size:24px;margin-bottom:5px">🚀</div>
+        Lançamentos Exclusivos 2025
+      </a>
+      <a href="#/catalogo?filter=promocao" onclick="return route('catalogo', 'promocao')" class="nav-block">
+        <div style="font-size:24px;margin-bottom:5px">🎁</div>
+        Oportunidades com Bónus (Taxa Zero)
+      </a>
+      <a href="#/catalogo?filter=modelos" onclick="return route('catalogo', 'modelos')" class="nav-block">
+        <div style="font-size:24px;margin-bottom:5px">SUV, Hatch, Sedan</div>
+        Explore Todos os Modelos VW
+      </a>
+    </div>
+
+    <!-- JORNADA DE CONSULTORIA -->
+    <div class="section-title">
+        <h2 style="margin:16px 0;color:var(--brand-vw)">4 Etapas para a Certeza da Compra</h2>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card pad" style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--accent-vw)">1.</div>
+        <h3 style="margin:5px 0 10px">O Diagnóstico Inteligente</h3>
+        <p class="muted">Antes de qualquer preço, alinho o seu desejo com as reais promoções de fábrica. Evito as armadilhas do mercado e garanto acesso às melhores condições feitas para si.</p>
+      </div>
+      <div class="card pad" style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--accent-vw)">2.</div>
+        <h3 style="margin:5px 0 10px">O Valor Real do Seu Usado</h3>
+        <p class="muted">Na Vega Automotores, maximizo o seu bónus de troca, garantindo uma avaliação 100% transparente para que o seu carro atual seja o seu maior investimento no VW Novo.</p>
+      </div>
+      <div class="card pad" style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--accent-vw)">3.</div>
+        <h3 style="margin:5px 0 10px">Proposta de Fábrica: Sem Filtros</h3>
+        <p class="muted">A proposta final chega diretamente a si no WhatsApp. Um clique é tudo o que separa a simulação da realidade. Transparência garantida pelo seu consultor, antes de qualquer compromisso.</p>
+      </div>
+      <div class="card pad" style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--accent-vw)">4.</div>
+        <h3 style="margin:5px 0 10px">A Certeza de um Novo Começo</h3>
+        <p class="muted">O momento da entrega é a celebração da sua decisão inteligente. Com o selo de garantia Vega Automotores, está pronto para a estrada sem preocupações.</p>
+      </div>
+    </div>
+    
+    <!-- AUTHORIDADE -->
+    <div class="dealer-info">
+      <div id="concessionariaInfo">
+        <h3>Vantagem Vega Automotores</h3>
+        <p class="muted" id="bioConcessionaria">A Vega Automotores é líder em satisfação do cliente na região de Belém. Ao lado da Volkswagen, garantimos a você não apenas um carro zero, mas toda a segurança, garantia de fábrica e serviços de pós-venda que só uma concessionária oficial pode oferecer.</p>
+        <!-- KPIs da Concessionária -->
+        <div class="kpi-container" id="concessionariaKpis">
+          <div class="kpi"><div id="kpi-servicos">10+</div><span>Serviços de Pós-Venda</span></div>
+          <div class="kpi"><div id="kpi-garantia">5 Anos</div><span>Garantia de Fábrica</span></div>
         </div>
       </div>
-      <aside class="stack">
-        <div class="card pad">
-          <div class="muted" style="font-size:12px">Entrada (R$)</div><input id="s-entrada" type="number" value="20000">
-          <div class="muted" style="font-size:12px">Meses</div><input id="s-meses" type="number" value="48">
-          <div class="muted" style="font-size:12px">Taxa mensal (%)</div><input id="s-taxa" type="number" step="0.01" value="1.75">
-          <div class="muted" style="font-size:12px;margin-top:6px">Parcela estimada</div>
-          <div id="s-parcela" class="price">R$ 0,00</div>
-          <button id="btnProposta" class="btn primary" style="width:100%;margin-top:10px">Proposta rápida</button>
+      
+      <!-- CARD DO VENDEDOR COM FOTO -->
+      <div class="vendedor-card" id="vendedorCard">
+        <img src="https://i.postimg.cc/BnNvBn0J/unnamed.jpg" alt="Marcelo Macedo - Consultor" class="vendedor-photo" id="vendedorPhoto" />
+        <h3 style="margin-bottom:5px;margin-top:0">Marcelo Macedo</h3>
+        <div class="muted" style="font-size:14px">Consultor Exclusivo VW</div>
+        <p class="muted" id="bioVendedor" style="font-size:15px">A compra de um VW Zero não deve ser um risco. Eu simplifico o processo, negoceio as condições de fábrica por si e garanto que não deixará dinheiro na mesa ao dar o seu usado como entrada.</p>
+        <!-- KPIs do Vendedor -->
+        <div class="kpi-container" id="vendedorKpis">
+          <div class="kpi"><div id="kpi-clientes">1.500+</div><span>Clientes Satisfeitos</span></div>
+          <div class="kpi"><div id="kpi-anos">10 Anos</div><span>De Experiência VW</span></div>
         </div>
-      </aside>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+        <a id="btnWA-bottom" class="btn wa" href="#" target="_blank" rel="noreferrer" style="font-size:1.1em">💬 Aperte o Cinto: Inicie a sua Compra Inteligente</a>
     </div>
   </section>
 
-  <!-- ADMIN -->
+  <!-- PAGE: CATÁLOGO DE OPORTUNIDADES -->
+  <section id="page-catalogo" class="hide">
+    <div class="section-title">
+      <h2 style="margin:16px 0;color:var(--brand-vw)">Catálogo de Oportunidades Volkswagen</h2>
+      <span class="pill"><span id="count">0</span> modelos Zero Km</span>
+    </div>
+
+    <div class="filters">
+      <input id="q" type="search" placeholder="Buscar por T-Cross, Polo, Nivus…">
+      <select id="fModel"><option value="">Modelo</option><option>Polo</option><option>Nivus</option><option>T-Cross</option><option>Virtus</option><option>Taos</option></select>
+      <select id="fy"><option value="">Ano min.</option><option>2025</option><option>2024</option><option>2023</option></select>
+      <select id="fCat"><option value="">Categoria</option><option>SUV</option><option>Sedan</option><option>Hatch</option></select>
+      <select id="fs"><option value="recent">Mais recentes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option></select>
+    </div>
+
+    <div class="section-title">
+        <h3 style="margin:16px 0;color:var(--brand-vw)">✨ Destaques da Semana</h3>
+        <span class="pill">Negociação Exclusiva</span>
+    </div>
+    <div id="featured" class="grid" style="grid-template-columns:repeat(3,1fr)"></div>
+
+    <div class="section-title">
+        <h3 style="margin:16px 0;color:var(--brand-vw)">Estoque Completo</h3>
+    </div>
+    <div id="list" class="grid" style="grid-template-columns:repeat(3,1fr)"></div>
+  </section>
+  
+  <!-- PAGE: DETALHE -->
+  <section id="page-detalhe" class="hide">
+    <div class="section-title">
+        <h2 id="dt-title-main" style="margin:0;color:var(--brand-vw)"></h2>
+        <a href="#/catalogo" onclick="return route('catalogo')" class="btn soft">← Voltar para o Catálogo</a>
+    </div>
+    <div class="dealer-info" style="border:none;grid-template-columns:2fr 1fr;padding:10px 0;text-align:left">
+        <div class="card" style="overflow:visible">
+            <div class="thumb" id="dt-foto"></div>
+            <div class="pad">
+                <p id="dt-promo" style="font-weight:700;color:var(--accent-vw)"></p>
+                <div class="meta" id="dt-meta"></div>
+                <div class="price" id="dt-price"></div>
+            </div>
+        </div>
+        <aside class="stack">
+            <div class="card pad">
+                <h3 style="margin-top:0;color:var(--brand-vw)">Simulador de Financiamento</h3>
+                <div class="muted" style="font-size:12px">Preencha os campos para simular.</div>
+                <div class="muted" style="font-size:12px">Entrada (R$)</div>
+                <input id="s-entrada" type="number" placeholder="Ex: 30000" style="margin-bottom:10px">
+                <div class="muted" style="font-size:12px">Meses</div>
+                <input id="s-meses" type="number" placeholder="Ex: 48" style="margin-bottom:10px">
+                <div class="muted" style="font-size:12px">Taxa a.m. (Previsão: 1.75%)</div>
+                <input id="s-taxa" type="number" step="0.01" value="1.75" placeholder="1.75" style="margin-bottom:10px">
+                <div class="muted" style="font-size:12px;margin-top:6px">Parcela estimada</div>
+                <div id="s-parcela" class="price" style="font-size:20px;margin:5px 0 15px">R$ 0,00</div>
+                <button id="btnProposta-dt" class="btn wa" style="width:100%">Enviar Proposta & Simulação</button>
+            </div>
+            <div class="card pad">
+                <h3 style="margin-top:0;color:var(--brand-vw)">Ficha Rápida</h3>
+                <ul id="dt-specs" class="muted" style="list-style-type:disc;margin:0;padding-left:20px;font-size:14px">
+                    <li>Motor: 1.0 TSI</li>
+                    <li>Câmbio: Automático</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+  </section>
+
+  <!-- PAGE: ADMIN -->
   <section id="page-admin" class="hide">
-    <!-- LOGIN (senha) -->
-    <div id="adm-login" class="card pad">
-      <h2>Admin • Acesso</h2>
-      <div class="muted" style="font-size:13px">Entre com e-mail e senha (criados em Auth → Users).</div>
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <input id="adm-email" placeholder="seu@email">
-        <input id="adm-pass" type="password" placeholder="senha">
-        <button id="adm-pwlogin" class="btn primary">Entrar</button>
+    <a href="#/portfolio" onclick="return route('portfolio')" class="btn soft" style="margin-top:20px">← Voltar para o Portfólio</a>
+
+    <div id="box-login" class="login-card card">
+      <h2 style="margin-top:0; color:var(--brand-vw)">Área Restrita | Consultor</h2>
+      <div class="muted" style="font-size:13px">Use sua conta de consultor da Vega Automotores.</div>
+
+      <div style="margin-top:20px">
+        <div class="input-group">
+          <input id="auth-email" placeholder="Seu E-mail" type="email" required>
+        </div>
+        <div class="input-group">
+          <input id="auth-password" placeholder="Senha" type="password" required>
+          <button class="toggle-password" onclick="togglePasswordVisibility()">
+            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="login-actions">
+        <button id="btn-login" class="btn primary">Entrar</button>
+        <button id="btn-google-login" class="btn btn-google">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.52-.2-2.23H12v4.26h6.01c-.26 1.34-.96 2.47-1.97 3.23l3.37 2.6c2.09-1.94 3.35-4.78 3.35-8.08z" fill="#4285F4"/><path d="M12 23c3.27 0 6.13-1.08 8.18-2.94l-3.37-2.6c-.92.6-2.09.95-3.81.95-2.9 0-5.38-1.95-6.27-4.57H2.33v2.85C4.84 21.05 8.16 23 12 23z" fill="#34A853"/><path d="M5.73 13.98c-.14-.52-.23-1.07-.23-1.63s.09-1.11.23-1.63V7.95H2.33c-.42.84-.66 1.8-.66 2.85s.24 2.01.66 2.85l3.4-2.2z" fill="#FBBC05"/><path d="M12 5.06c1.77 0 3.32.61 4.54 1.79l2.87-2.87C17.72 2.92 15.06 2 12 2 8.16 2 4.84 3.95 2.33 6.91l3.4 2.67C6.62 7.01 9.1 5.06 12 5.06z" fill="#EA4335"/></svg>
+          Google
+        </button>
       </div>
     </div>
 
-    <!-- APP -->
-    <div id="adm-app" class="hide">
-      <div class="section-title" style="margin-top:10px">
-        <h2 id="dealerInfo">Carregando…</h2>
-        <div class="tabs">
-          <button class="btn" data-tab="tDash">Dashboard</button>
-          <button class="btn" data-tab="tCars">Veículos</button>
-          <button class="btn" data-tab="tLeads">Leads</button>
-          <button class="btn" data-tab="tCfg">Configurações</button>
+    <div id="box-app" class="hide">
+      <div class="section-title" style="margin-top:6px;border-bottom:1px solid var(--line);padding-bottom:10px">
+        <h2 id="dealerInfo">Carregando Informações...</h2>
+        <div class="nav">
+          <button class="btn" id="newCar">+ Novo Carro</button>
+          <button class="btn" id="seed">Seed (6 Demos)</button>
+          <button class="btn" id="refresh">Atualizar</button>
+          <button class="btn" id="logout">Sair</button>
         </div>
       </div>
-
-      <!-- DASHBOARD -->
-      <div id="tDash" class="stack">
-        <div class="kpi">
-          <div class="card"><div class="pad"><div class="muted">Veículos ativos</div><div id="kAct" class="price">–</div></div></div>
-          <div class="card"><div class="pad"><div class="muted">Destaques</div><div id="kStar" class="price">–</div></div></div>
-          <div class="card"><div class="pad"><div class="muted">Leads (30d)</div><div id="kLead" class="price">–</div></div></div>
-        </div>
-      </div>
-
-      <!-- VEÍCULOS -->
-      <div id="tCars" class="stack hide">
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn primary" id="newCar">+ Novo veículo</button>
-          <button class="btn" id="seed">Popular com 6 exemplos</button>
-          <button class="btn" id="refreshCars">Atualizar</button>
-        </div>
-
-        <div class="table" id="carsTable">
-          <div class="row head"><div>Título</div><div>Preço</div><div>Ano</div><div>KM</div><div>Status</div><div>Destaque</div><div>Ações</div></div>
-        </div>
-      </div>
-
-      <!-- LEADS -->
-      <div id="tLeads" class="stack hide">
-        <div class="table" id="leadsTable">
-          <div class="row head" style="grid-template-columns:1fr .9fr .7fr 2fr"><div>Quando</div><div>Canal</div><div>Veículo</div><div>Mensagem</div></div>
-        </div>
-      </div>
-
-      <!-- CONFIG -->
-      <div id="tCfg" class="stack hide">
-        <div class="card pad" style="display:grid;gap:10px;max-width:560px">
-          <label>Nome da vitrine <input id="cfgName"></label>
-          <label>Cidade/UF <input id="cfgCity"></label>
-          <label>WhatsApp (55+DDD+número) <input id="cfgWa"></label>
-          <label>Cor da marca <input id="cfgColor" type="color" value="#25D366"></label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button id="cfgSave" class="btn primary">Salvar</button>
-            <span class="muted" style="font-size:12px">A cor atualiza o botão WA e destaques</span>
-          </div>
-        </div>
-      </div>
+      <div id="listAdmin" class="stack" style="margin-top:10px"></div>
     </div>
   </section>
+
 </main>
 
-<footer class="wrap">© <span id="y"></span> — Vitrine conectada ao Supabase. Dados e imagens meramente ilustrativos.</footer>
-
-<!-- WhatsApp flutuante -->
-<a id="wa" class="wa" href="#" target="_blank" rel="noreferrer" aria-label="WhatsApp">WA</a>
-
-<!-- Overlay fotos -->
-<div class="over" id="over">
-  <div class="panel">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <h3>Fotos do veículo</h3>
-      <div style="display:flex;gap:8px">
-        <button class="btn" id="btnUpFoto">+ Upload</button>
-        <button class="btn primary" id="btnSaveOrder">Salvar ordem</button>
-        <button class="btn ghost" id="btnCloseOver">Fechar</button>
-      </div>
-    </div>
-    <div class="photo-grid" id="pg"></div>
-  </div>
+<div class="wa-float">
+  <a id="waFloat" class="btn wa" href="#" target="_blank" rel="noreferrer" title="Falar com o seu Consultor">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.036 1c-6.046 0-10.964 4.918-10.964 10.964 0 2.059.571 4.026 1.636 5.766L1 23l5.525-1.503c1.677.925 3.58 1.408 5.511 1.408 6.045 0 10.964-4.918 10.964-10.964S18.081 1 12.036 1zm4.613 13.567c-.201.353-.699.712-1.018.751-.309.043-.655.051-1.026-.178-.445-.268-1.464-.567-2.802-1.787-1.025-.929-1.706-2.062-1.895-2.388-.189-.326-.008-.5.163-.679.16-.164.353-.404.53-.615.176-.214.23-.365.346-.615.118-.255.061-.47-.03-.667-.09-.199-.817-1.996-1.119-2.732-.294-.716-.583-.615-.8-.615-.205 0-.445-.022-.686-.022-.236 0-.622.088-.94.437-.319.344-1.21 1.187-1.21 2.897s1.246 3.354 1.419 3.585c.174.23.292.49.544.835 1.096 1.488 2.079 2.082 3.195 2.62.339.166.577.27.778.337.247.086.536.069.734-.029.23-.112.721-.347 1.258-.813.593-.526 1.077-.942 1.231-.177.155.766.155 1.411.085 1.545-.069.135-.201.217-.406.326z"/></svg>
+    Consultoria WhatsApp
+  </a>
 </div>
+
+<footer class="wrap">
+  © <span id="y"></span> Vega Automotores, Concessionária Oficial Volkswagen. Todos os direitos reservados.
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ====== CONFIG ====== */
+// ===== CONFIGURAÇÕES (SUBSTITUA AS STRINGS ABAIXO) =====
+const VENDEDOR_NAME = "Marcelo Macedo";
+const CONCESSIONARIA_NAME = "Vega Automotores";
+const BRAND_NAME = "Volkswagen";
+const DEALER_CITY_STATE = "Belém/PA";
+
+// Configurações do Supabase (Substituídas diretamente)
 const SUPABASE_URL  = "https://ikrzslkihibraaalenxp.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcnpzbGtpaGlicmFhYWxlbnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjc5MjUsImV4cCI6MjA3Nzk0MzkyNX0.VqAiCdgDs66opqYZjOPZPAdcN1Nee1kMczbrOYo4ip4";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth:{ persistSession:true, autoRefreshToken:true }});
+const DEALER_DEFAULT_PHONE = "5591999998888"; // Telefone de exemplo: 55 + DDD + Número
 
-const DEALER_DEFAULT = { name:"Marcelo Macedo – Seminovos", city:"Belém/PA", whatsapp:"5591XXXXXXXXX", brand_color:"#25D366" };
-const WA = (digits, t="Olá! Tenho interesse no veículo.") => "https://wa.me/"+digits+"?text="+encodeURIComponent(t);
-const $ = (s,c=document)=>c.querySelector(s);
-const BRL = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const digits = s => String(s||"").replace(/\D/g,"");
-const show = id => { ["page-estoque","page-detalhe","page-admin"].forEach(x=>$("#"+x).classList.add("hide")); $("#"+id).classList.remove("hide"); };
-const on = (el,ev,fn)=>el&&el.addEventListener(ev,fn);
+// URL da foto do Marcelo (AGORA UTILIZANDO A IMAGEM FORNECIDA PELO USUÁRIO)
+const VENDEDOR_PHOTO_URL = "https://i.postimg.cc/BnNvBn0J/unnamed.jpg";
 
-/* ====== UI & INIT ====== */
-on($("#menuBtn"),"click",()=>$("#menu").classList.toggle("open"));
-document.getElementById("y").textContent = new Date().getFullYear();
-let dealerId=null, dealer=null, dealerPhone="5591XXXXXXXXX";
-function applyBrand(color){ document.documentElement.style.setProperty('--brand', color||"#25D366"); }
-function setWA(phone){ const d=digits(phone); dealerPhone = d.length>=11?d:"5591XXXXXXXXX"; $("#wa").href = WA(dealerPhone); }
+// Inicialização do Supabase Client
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-show("page-estoque");
+// ===== HELPERS =====
+const $ = (s, c=document) => c.querySelector(s);
+const BRL = (n) => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const digits = (s) => String(s||"").replace(/\D/g,"");
+const WA = (digits, t="Olá!") => "https://wa.me/" + digits + "?text=" + encodeURIComponent(t);
+const show = (id) => { 
+  const pages = ["page-portfolio", "page-catalogo", "page-detalhe", "page-admin"];
+  pages.forEach(x => $("#"+x).classList.add("hide")); 
+  if($("#"+id)) $("#"+id).classList.remove("hide"); 
+};
+const debounce = (fn, ms=200) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+let dealerPhone = DEALER_DEFAULT_PHONE;
 
-/* ====== Catálogo público ====== */
+// DEMO Data (Simplificada parabrevidade)
 const DEMO = [
-  { id:"d1", title:"Volkswagen Polo 1.0", year:2024, km:45806, gearbox:"Manual", fuel:"Flex", price:72990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=VW+Polo"] },
-  { id:"d2", title:"Jeep Renegade Longitude 1.3", year:2024, km:45500, gearbox:"Automático", fuel:"Flex", price:111990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=Jeep+Renegade"] },
-  { id:"d3", title:"Nissan Kicks Advance 1.6", year:2024, km:40120, gearbox:"Automático", fuel:"Flex", price:108990, bairro:"Belém", destaque:true,  photos:["https://placehold.co/960x640/222/FFF?text=Nissan+Kicks"] },
-  { id:"d4", title:"Fiat Cronos Drive 1.0", year:2024, km:46698, gearbox:"Manual", fuel:"Flex", price:75990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Fiat+Cronos"] },
-  { id:"d5", title:"Chevrolet Onix LT 1.0", year:2024, km:44768, gearbox:"Manual", fuel:"Flex", price:69990, bairro:"Belém", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=Onix+LT"] },
-  { id:"d6", title:"Hyundai HB20 Sense 1.0", year:2024, km:41104, gearbox:"Manual", fuel:"Flex", price:67990, bairro:"Ananindeua", destaque:false, photos:["https://placehold.co/960x640/222/FFF?text=HB20"] },
+  { id: "demo1", title:"VW T-Cross Comfortline 200 TSI", year:2025, km:0, gearbox:"Automático", fuel:"Flex", price:135990, promotion_tag:"Lançamento 2025", destaque:true, promotion_text:"Bónus de R$ 8.000 na troca do seu usado!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+T-Cross+2025"] , ficha_tecnica: { Categoria: "SUV", Motor: "1.0 TSI Turbo", Câmbio: "Automático 6 marchas", Airbags: "6", Central: "VW Play 10.1\"" } },
+  { id: "demo2", title:"VW Polo Track 1.0 MPI", year:2025, km:0, gearbox:"Manual", fuel:"Flex", price:87990, promotion_tag:"Preço de Fábrica", destaque:true, promotion_text:"Taxa Zero em 24x!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+Polo+Track"] , ficha_tecnica: { Categoria: "Hatch", Motor: "1.0 MPI", Câmbio: "Manual 5 marchas", Airbags: "4" } },
+  { id: "demo3", title:"VW Virtus Highline 200 TSI", year:2024, km:0, gearbox:"Automático", fuel:"Flex", price:149990, promotion_tag:"Taxa 0.99%", destaque:false, promotion_text:"Primeira parcela para 90 dias!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+Virtus+Highline"] , ficha_tecnica: { Categoria: "Sedan", Motor: "1.0 TSI Turbo", Câmbio: "Automático 6 marchas", Airbags: "6" } },
+  { id: "demo4", title:"VW Nivus Comfortline 200 TSI", year:2024, km:0, gearbox:"Automático", fuel:"Flex", price:129990, promotion_tag:"Últimas Unidades", destaque:false, promotion_text:"Bónus Especial para fechar o mês!", photos:["https://placehold.co/960x640/002975/FFF?text=VW+Nivus+Comfortline"] , ficha_tecnica: { Categoria: "SUV", Motor: "1.0 TSI Turbo", Câmbio: "Automático 6 marchas", Airbags: "6" } },
+  { id: "demo5", title:"VW Taos Comfortline 250 TSI", year:2024, km:0, gearbox:"Automático", fuel:"Flex", price:185000, promotion_tag:"Venda Direta", destaque:false, promotion_text:"Desconto Frotista/CNPJ", photos:["https://placehold.co/960x640/002975/FFF?text=VW+Taos+SUV"] , ficha_tecnica: { Categoria: "SUV", Motor: "1.4 TSI Turbo", Câmbio: "Automático 6 marchas", Airbags: "6" } },
 ];
-let cache=[];
+
+
+// ===== CATALOGO & VENDOR INFO =====
+let cache = [];
 
 async function fetchVehicles(){
-  const { data, error } = await sb.from("vehicle_public").select("*").order("destaque",{ascending:false}).order("created_at",{ascending:false});
-  cache = (!error && data && data.length)? data : DEMO;
-  renderFeatured(); renderCatalog(); $("#count").textContent=cache.length;
+  // Fetch/Set Dealer Info
+  const { data: dealerData } = await sb.from("dealer").select("*").maybeSingle();
+  if(dealerData){
+    $("#dealerLocation").textContent = `${dealerData.concessionaria_name || CONCESSIONARIA_NAME} • ${dealerData.city || DEALER_CITY_STATE}`;
+    $("#bioVendedor").textContent = dealerData.bio_vendedor || $("#bioVendedor").textContent;
+    $("#bioConcessionaria").textContent = dealerData.bio_concessionaria || $("#bioConcessionaria").textContent;
+    const kpis = dealerData.kpis || {};
+    $("#kpi-clientes").textContent = kpis.clientes || "1.500+";
+    $("#kpi-anos").textContent = kpis.anos || "10 Anos";
+    setDealerWA(dealerData.whatsapp);
+  } else {
+    $("#dealerLocation").textContent = `${CONCESSIONARIA_NAME} • ${DEALER_CITY_STATE}`;
+  }
+  
+  // Define a foto do vendedor na UI
+  $("#vendedorPhoto").src = VENDEDOR_PHOTO_URL;
+
+  // Fetch Vehicles
+  const { data, error } = await sb.from("vehicle").select("*").eq("status", "ativo").order("destaque",{ascending:false}).order("year",{ascending:false});
+  cache = (!error && data && data.length) ? data : DEMO;
+  renderCatalog();
+  $("#count").textContent = cache.length;
 }
-function card(v){
-  const foto=(v.photos&&v.photos[0])||"https://placehold.co/800x500?text=Sem+foto";
-  const km=(v.km!=null)? v.km.toLocaleString("pt-BR")+" km":"";
-  const meta=[v.year,km,v.gearbox,v.fuel].filter(Boolean).join(" • ");
+
+function cardHTML(v){
+  const foto = (v.photos && v.photos[0]) || `https://placehold.co/960x640/002975/FFF?text=${v.title||'Sem Foto'}`;
+  const meta = [v.year, "Zero Km"].filter(Boolean).join(" • ");
+  const promo_tag = v.promotion_tag ? `<span class="promo-tag" style="background:var(--wa);color:white;top:10px;left:auto;right:10px;box-shadow:0 0 8px rgba(0,0,0,.3);position:absolute;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;">${v.promotion_tag}</span>` : '';
+
   return `<article class="card">
-    <a href="#/carro/${v.id}" onclick="return navDetalhe('${v.id}')"><div class="thumb"><img src="${foto}" alt=""></div></a>
-    <div class="pad"><div class="title">${v.title||""}</div><div class="meta">${meta}</div><div class="price">${BRL(v.price)}</div>
-      <div style="display:flex;gap:8px"><a class="btn primary" href="#" onclick="return interesse('${v.id}')">Proposta rápida</a><a class="btn" href="#/carro/${v.id}" onclick="return navDetalhe('${v.id}')">Detalhes</a></div>
-    </div></article>`;
+    <a href="#/carro/${v.id}" onclick="return navDetalhe('${v.id}')">
+      <div class="thumb">${promo_tag}<img src="${foto}" alt="${v.title||''}" onerror="this.onerror=null;this.src='https://placehold.co/960x640/002975/FFF?text=${BRAND_NAME}';" style="border-radius:16px 16px 0 0;"></div>
+    </a>
+    <div class="pad">
+      <div class="title">${v.title||""}</div>
+      <div class="meta">${meta}</div>
+      <div style="font-size:14px;color:var(--accent-vw);font-weight:700;min-height:30px">${v.promotion_text||''}</div>
+      <div class="price">${BRL(v.price)}</div>
+      <div style="display:flex;gap:8px">
+        <a class="btn wa" href="#" onclick="return interesse('${v.id}')">Desbloquear Condição Exclusiva</a>
+      </div>
+    </div>
+  </article>`;
 }
-function renderFeatured(){ $("#featured").innerHTML = cache.filter(v=>v.destaque).map(card).join("")||"<div class='muted'>Sem destaques.</div>"; }
+
+function renderFeatured(){
+  const el = $("#featured");
+  const arr = cache.filter(v => v.destaque);
+  el.innerHTML = arr.map(cardHTML).join("") || `<div class='muted' style="padding:10px;grid-column:1/-1">Sem destaques no momento. Verifique o estoque completo.</div>`;
+}
+
 function renderCatalog(){
-  const q=$("#q").value.trim().toLowerCase(), fy=$("#fy").value, ff=$("#ff").value, fg=$("#fg").value, fs=$("#fs").value;
-  let list=cache.filter(v=>(!q||(v.title||'').toLowerCase().includes(q))&&(!fy||v.year>=+fy)&&(!ff||v.fuel===ff)&&(!fg||v.gearbox===fg));
-  switch(fs){case"price-asc":list.sort((a,b)=>(a.price||0)-(b.price||0));break;case"price-desc":list.sort((a,b)=>(b.price||0)-(a.price||0));break;case"km-asc":list.sort((a,b)=>(a.km||0)-(b.km||0));break;default:list.sort((a,b)=>(b.year||0)-(a.year||0));}
-  $("#list").innerHTML = list.map(card).join("")||"<p>Nenhum veículo encontrado.</p>";
+  const q  = $("#q").value.trim().toLowerCase();
+  const fModel = $("#fModel").value;
+  const fy = $("#fy").value;
+  const fCat = $("#fCat").value;
+  const fs = $("#fs").value;
+  
+  let list = cache.filter(v => (
+    (!q || (v.title||'').toLowerCase().includes(q) || (v.promotion_tag||'').toLowerCase().includes(q)) &&
+    (!fModel || (v.title||'').includes(fModel)) &&
+    (!fy || v.year >= +fy) &&
+    (!fCat || (v.ficha_tecnica?.Categoria === fCat))
+  ));
+  
+  renderFeatured();
+  
+  list = list.filter(v => !v.destaque);
+
+  switch(fs){
+    case "price-asc":  list.sort((a,b)=> (a.price||0)-(b.price||0)); break;
+    case "price-desc": list.sort((a,b)=> (b.price||0)-(a.price||0)); break;
+    default:           list.sort((a,b)=> (b.year||0)-(a.year||0)); break;
+  }
+  $("#list").innerHTML = list.map(cardHTML).join("") || "<p class='muted' style='grid-column:1/-1'>Nenhum veículo encontrado no catálogo.</p>";
 }
-window.addEventListener("hashchange",()=>{ const h=location.hash.split("/"); if(h[1]==="carro"&&h[2]) navDetalhe(h[2]); else if(h[1]==="admin") route("admin"); else route("estoque"); });
 
 function navDetalhe(id){
-  const v=cache.find(x=>x.id==id); if(!v) return false; show("page-detalhe");
-  const foto=(v.photos&&v.photos[0])||"https://placehold.co/1200x700?text=Sem+foto";
-  $("#dt-foto").innerHTML=`<img src="${foto}" style="width:100%;height:100%;object-fit:cover">`;
-  $("#dt-title").textContent=v.title||""; const km=(v.km!=null)? v.km.toLocaleString("pt-BR")+" km":"";
-  $("#dt-meta").textContent=[v.year,km,v.gearbox,v.fuel].filter(Boolean).join(" • ");
-  $("#dt-price").textContent=BRL(v.price);
-  const e=$("#s-entrada"), m=$("#s-meses"), t=$("#s-taxa"), p=$("#s-parcela");
-  const recalc=()=>{ const E=+e.value||0, M=+m.value||1, I=(+t.value||0)/100, PV=Math.max(0,(v.price||0)-E); const parcela=(I>0)? (PV*I)/(1-Math.pow(1+I,-M)):(PV/M); p.textContent=BRL(parcela); };
-  [e,m,t].forEach(i=>i.oninput=recalc); recalc();
-  $("#btnProposta").onclick=()=>interesse(v.id);
+  const v = cache.find(x => x.id == id);
+  if(!v) return false;
+  show("page-detalhe");
+  const foto = (v.photos && v.photos[0]) || `https://placehold.co/1200x700/002975/FFF?text=${v.title||'Sem Foto'}`;
+  
+  $("#dt-title-main").textContent = v.title||"";
+  $("#dt-foto").innerHTML = `<img src="${foto}" alt="${v.title}" style="width:100%;height:100%;object-fit:cover;border-radius:12px">`;
+  $("#dt-promo").textContent = v.promotion_text || '';
+  $("#dt-meta").textContent = [v.year, v.ficha_tecnica?.Câmbio || v.gearbox, v.fuel, "Zero Km"].filter(Boolean).join(" • ");
+  $("#dt-price").textContent = BRL(v.price);
+  
+  const specs = v.ficha_tecnica ? Object.entries(v.ficha_tecnica).map(([key, val]) => `<li>${key}: ${val}</li>`).join("") : "<li>Ficha técnica completa disponível via WhatsApp.</li>";
+  $("#dt-specs").innerHTML = specs;
+  
+  const entrada = $("#s-entrada"), meses=$("#s-meses"), taxa=$("#s-taxa"), parc=$("#s-parcela");
+  const priceBase = v.price || 0;
+
+  const recalc = ()=>{
+    const e = +entrada.value||0, m=+meses.value||1, i=(+taxa.value||0)/100, pv=Math.max(0,priceBase-e);
+    const p = (i>0)? (pv*i)/(1-Math.pow(1+i,-m)) : (pv/m);
+    parc.textContent = BRL(p);
+  };
+  [entrada,meses,taxa].forEach(inp => inp.oninput = recalc); recalc();
+  $("#btnProposta-dt").onclick = ()=> interesse(v.id, true);
   return false;
 }
-async function interesse(id){
-  const v=cache.find(x=>x.id==id); if(!v) return false;
-  const km=(v.km!=null)? v.km.toLocaleString("pt-BR")+" km":"";
-  const msg=`Olá! Tenho interesse no ${v.title} (${v.year}, ${km}) por ${BRL(v.price)}.`;
-  try{ await sb.from("lead").insert({ vehicle_id:id, channel:"interest", utm_source:"site", utm_medium:"proposta", utm_campaign:"catalog", message: msg }); }catch(e){}
-  location.href = WA(dealerPhone, msg); return false;
-}
-["#q","#fy","#ff","#fg","#fs"].forEach(s=>on($(s),"input",()=>renderCatalog()));
-sb.channel("rt").on("postgres_changes",{event:"*",schema:"public",table:"vehicle"},fetchVehicles).subscribe();
 
-/* ====== Admin (e-mail + senha) ====== */
-on($("#adm-pwlogin"),"click",async()=>{
-  const email=$("#adm-email").value.trim();
-  const pass=$("#adm-pass").value;
-  if(!email||!pass) return alert("Preencha e-mail e senha.");
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if(error) return alert(error.message);
-  route("admin");
-});
-on($("#btnLogout"),"click",async()=>{ await sb.auth.signOut(); alert("Sessão encerrada."); route("estoque"); });
-
-async function route(page){
-  $("#menu").classList.remove("open");
-  if(page==="admin"){
-    show("page-admin");
-    const session = (await sb.auth.getSession()).data.session;
-    if(!session){ $("#adm-login").classList.remove("hide"); $("#adm-app").classList.add("hide"); return false; }
-    await ensureDealer(session.user);
-    $("#adm-login").classList.add("hide"); $("#adm-app").classList.remove("hide");
-    openTab("tDash"); renderAdmin(); return false;
-  } else { show("page-estoque"); fetchVehicles(); return false; }
-}
-(async()=>{ const { data } = await sb.auth.getSession(); if(data?.session) await ensureDealer(data.session.user); fetchVehicles(); })();
-
-async function ensureDealer(user){
-  let { data: mem } = await sb.from("dealer_member").select("dealer_id,role").eq("user_id",user.id).maybeSingle();
-  if(!mem){
-    const ins = await sb.from("dealer").insert({ name: DEALER_DEFAULT.name, city: DEALER_DEFAULT.city, whatsapp: DEALER_DEFAULT.whatsapp, brand_color: DEALER_DEFAULT.brand_color, created_by:user.id }).select("id,whatsapp,brand_color,name,city").single();
-    if(ins.error){ alert("Erro criando vitrine: "+ins.error.message); return; }
-    await sb.from("dealer_member").insert({ dealer_id: ins.data.id, user_id:user.id, role:"owner" });
-    mem = { dealer_id: ins.data.id, role:"owner" };
-    dealer = ins.data;
+async function interesse(id, isDetail=false){
+  const v = cache.find(x => x.id == id); if(!v) return false;
+  let sim = '';
+  if(isDetail){
+    // Captura os valores do simulador na página de detalhe
+    sim = ` Simulação: Entrada R$${$("#s-entrada").value || 'Não informada'} em ${$("#s-meses").value || '48'}x de ${$("#s-parcela").textContent}.`;
   }
-  dealerId = mem.dealer_id;
-  if(!dealer){ const dd = await sb.from("dealer").select("*").eq("id",dealerId).single(); dealer = dd.data; }
-  applyBrand(dealer.brand_color||"#25D366"); setWA(dealer.whatsapp||"5591XXXXXXXXX");
-  $("#dealerInfo").textContent = `${dealer.name||""} • ${(dealer.city||"")} • WhatsApp: ${dealer.whatsapp||""}`;
-  if(mem.role!=="owner"){ $("#adm-app").innerHTML = `<div class="card pad">Sem permissão para administrar esta vitrine.</div>`; }
+  const msg = `Olá Marcelo! Vi na sua vitrine o ${v.title} (${v.year}) por ${BRL(v.price)}.${sim} Gostaria de avançar com a proposta.`;
+  
+  try{ await sb.from("lead").insert({ vehicle_id:id, channel:"whatsapp", utm_source:"site", utm_medium:"proposta", utm_campaign:"catalog", message: msg }); }catch(e){}
+  location.href = WA(dealerPhone, msg);
+  return false;
 }
 
-/* ====== Admin: KPIs / Leads / Config ====== */
-const tabs=["tDash","tCars","tLeads","tCfg"]; function openTab(id){ tabs.forEach(t=>$("#"+t).classList.toggle("hide",t!==id)); }
-document.querySelectorAll(".tabs .btn").forEach(b=> b.addEventListener("click", ()=> openTab(b.dataset.tab)) );
+// ===== AUTH & ADMIN FUNCTIONS =====
 
-async function renderAdmin(){
-  const { data: kc } = await sb.from("vehicle").select("status,destaque").eq("dealer_id", dealerId);
-  $("#kAct").textContent = (kc||[]).filter(v=>v.status==="ativo").length;
-  $("#kStar").textContent = (kc||[]).filter(v=>v.destaque).length;
-  const d30=new Date(); d30.setDate(d30.getDate()-30);
-  const { data: kl } = await sb.from("lead").select("id").gte("created_at", d30.toISOString());
-  $("#kLead").textContent = (kl||[]).length;
-  await loadCars(); await loadLeads();
-  $("#cfgName").value = dealer.name||""; $("#cfgCity").value = dealer.city||""; $("#cfgWa").value = dealer.whatsapp||""; $("#cfgColor").value = dealer.brand_color||"#25D366";
+function togglePasswordVisibility() {
+  const passwordInput = $("#auth-password");
+  const iconContainer = $("#eye-icon");
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    // Ícone de olho aberto (simplificado)
+    iconContainer.innerHTML = '<path d="M12 4s3 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle>'; 
+  } else {
+    passwordInput.type = "password";
+    // Ícone de olho fechado (simplificado)
+    iconContainer.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle>'; 
+  }
+}
+window.togglePasswordVisibility = togglePasswordVisibility;
+
+$("#btn-login").onclick = async ()=>{
+  const email = $("#auth-email").value.trim();
+  const password = $("#auth-password").value.trim();
+  if (!email || !password) return alert("Por favor, preencha o email e a senha.");
+  
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  
+  if(error) {
+    alert(`Erro no Login: ${error.message}. Verifique suas credenciais.`);
+  } 
+  // O onAuthStateChange tratará o sucesso
+};
+
+$("#btn-google-login").onclick = async ()=>{
+  const { error } = await sb.auth.signInWithOAuth({ provider: 'google' });
+  if (error) alert(`Erro no Login com Google: ${error.message}`);
+};
+
+
+$("#logout").onclick = async ()=>{
+  await sb.auth.signOut();
+  $("#box-app").classList.add("hide");
+  $("#box-login").classList.remove("hide");
+  route('portfolio');
+};
+
+function setDealerWA(phoneRaw){
+  const d = digits(phoneRaw);
+  if(d.length>=11){
+    dealerPhone = d;
+    const waMsg = `Olá Marcelo! Gostaria de iniciar a minha consultoria para comprar um VW Zero Km.`;
+    $("#btnWA-bottom").href = WA(dealerPhone, waMsg);
+    $("#waFloat").href = WA(dealerPhone, waMsg);
+  }else{
+    dealerPhone = DEALER_DEFAULT_PHONE;
+  }
 }
 
-/* ====== Veículos (CRUD) ====== */
-on($("#newCar"),"click",async()=>{
-  const title=prompt("Título (ex.: Polo 1.0 2024)"); if(!title) return;
-  const price=+prompt("Preço (números)")||0, year=+prompt("Ano")||2024, km=+prompt("KM")||0;
-  const gearbox=prompt("Câmbio (Automático/Manual)","Manual")||"Manual";
-  const fuel=prompt("Combustível (Flex/Gasolina/Diesel/Híbrido/Elétrico)","Flex")||"Flex";
-  const bairro=prompt("Bairro","Belém")||"Belém";
-  const { error } = await sb.from("vehicle").insert({ dealer_id: dealerId, title, price, year, km, gearbox, fuel, bairro, status:"ativo" });
-  if(error) alert(error.message); else loadCars();
-});
-on($("#seed"),"click",async()=>{
-  if(!confirm("Inserir 6 veículos de exemplo?")) return;
-  const payload = DEMO.map(v=>({ dealer_id:dealerId, title:v.title, year:v.year, km:v.km, gearbox:v.gearbox, fuel:v.fuel, price:v.price, bairro:v.bairro, status:"ativo", destaque:!!v.destaque }));
-  const { error } = await sb.from("vehicle").insert(payload);
-  if(error) alert(error.message); else loadCars();
-});
-on($("#refreshCars"),"click",()=>loadCars());
+async function injectAdminLink(){
+  const { data: { session } } = await sb.auth.getSession();
+  const nav = $("header .nav");
 
-async function loadCars(){
-  const { data } = await sb.from("vehicle").select("id,title,price,year,km,status,destaque").eq("dealer_id",dealerId).order("updated_at",{ascending:false});
-  const wrap = document.createElement("div");
-  (data||[]).forEach(v=>{
-    const row=document.createElement("div"); row.className="row";
-    row.innerHTML = `
-      <div><strong>${v.title}</strong></div>
-      <div>${BRL(v.price)}</div>
-      <div>${v.year||""}</div>
-      <div>${(v.km||0).toLocaleString('pt-BR')} km</div>
-      <div>${v.status}</div>
-      <div>${v.destaque? "⭐":"—"}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn" data-act="foto" data-id="${v.id}">Fotos</button>
-        <button class="btn" data-act="edit" data-id="${v.id}">Editar</button>
-        <button class="btn" data-act="tog"  data-id="${v.id}">${v.status==='ativo'?'Pausar':'Ativar'}</button>
-        <button class="btn" data-act="star" data-id="${v.id}">${v.destaque?'Remover destaque':'Destacar'}</button>
-        <button class="btn warn" data-act="del" data-id="${v.id}">Excluir</button>
-      </div>`;
-    wrap.appendChild(row);
-  });
-  const table=$("#carsTable"); table.querySelectorAll(".row:not(.head)").forEach(e=>e.remove());
-  table.appendChild(wrap);
+  if(session){
+    if(!$(".admin-btn")){
+        const adminBtn = document.createElement("a");
+        adminBtn.href = "#/admin";
+        adminBtn.className = "btn admin-btn";
+        adminBtn.textContent = "Área Admin";
+        adminBtn.onclick = ()=>route('admin');
+        // Insere o botão antes do último elemento (que é o botão WA)
+        const waBtn = $("a.btn.wa");
+        if (waBtn) {
+            nav.insertBefore(adminBtn, waBtn);
+        } else {
+            nav.appendChild(adminBtn);
+        }
+    }
+    if(location.hash === '#/admin') bootstrapAdmin(session);
+  } else {
+    const adminBtn = $(".admin-btn");
+    if(adminBtn) adminBtn.remove();
+    if(location.hash === '#/admin') show('page-admin');
+  }
+}
 
-  table.querySelectorAll("button[data-act]").forEach(b=>{
-    b.onclick = async ()=>{
-      const id=b.dataset.id, act=b.dataset.act;
-      if(act==="tog"){ const { data:v } = await sb.from("vehicle").select("status").eq("id",id).single(); await sb.from("vehicle").update({ status:(v.status==='ativo'?'pausado':'ativo')}).eq("id",id); loadCars(); }
-      if(act==="star"){ const { data:v } = await sb.from("vehicle").select("destaque").eq("id",id).single(); await sb.from("vehicle").update({ destaque:!v.destaque}).eq("id",id); loadCars(); fetchVehicles(); }
-      if(act==="edit"){ const { data:v } = await sb.from("vehicle").select("*").eq("id",id).single();
-        const title=prompt("Título", v.title); if(title==null) return;
-        const price=+prompt("Preço", v.price); const year=+prompt("Ano",v.year); const km=+prompt("KM",v.km);
-        await sb.from("vehicle").update({ title,price,year,km }).eq("id",id); loadCars();
+async function bootstrapAdmin(session){
+  if(!session) return;
+  show('page-admin');
+  $("#box-login").classList.add("hide");
+  $("#box-app").classList.remove("hide");
+  const user = session.user;
+
+  // 1. Fetch/Setup Dealer Profile
+  let { data: dealerProfile } = await sb.from("dealer").select("*").maybeSingle();
+  if(!dealerProfile){
+    const profileData = { vendedor_name: VENDEDOR_NAME, concessionaria_name: CONCESSIONARIA_NAME, brand: BRAND_NAME, city: DEALER_CITY_STATE.split('/')[0], whatsapp: DEALER_DEFAULT_PHONE, created_by: user.id };
+    const { data, error } = await sb.from("dealer").insert(profileData).select("*").single();
+    if(error) { console.error("Erro no bootstrap do dealer:", error); return; }
+    dealerProfile = data;
+  }
+  
+  $("#dealerInfo").textContent = `${dealerProfile.vendedor_name} (${dealerProfile.concessionaria_name}) • ${dealerProfile.whatsapp}`;
+  setDealerWA(dealerProfile.whatsapp);
+  
+  // 2. Setup Admin Functions
+  async function listAdmin(){
+    const { data } = await sb.from("vehicle").select("id,title,price,year,status,destaque,promotion_tag").eq("dealer_id", dealerProfile.id).order("updated_at",{ascending:false});
+    $("#listAdmin").innerHTML = (data||[]).map(v => `
+      <div class="card pad" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px;box-shadow:none">
+        <div style="flex:1">
+          <strong>${v.title}</strong> • ${v.year} • ${BRL(v.price)} <br>
+          <span class="muted" style="font-size:12px">${v.promotion_tag||'Sem Promo'} | Status: ${v.status} ${v.destaque?'| DESTAQUE':''}</span>
+        </div>
+        <button class="btn soft" onclick="admFoto('${v.id}','${dealerProfile.id}')">Fotos</button>
+        <button class="btn soft" onclick="admEdit('${v.id}')">Editar</button>
+        <button class="btn soft" onclick="admToggle('${v.id}')">${v.status==='ativo'?'Pausar':'Ativar'}</button>
+        <button class="btn soft" onclick="admStar('${v.id}')">${v.destaque?'Normal':'Destacar'}</button>
+      </div>
+    `).join("") || "<div class='muted'>Sem veículos. Use + Novo Carro ou Seed.</div>";
+  }
+  window.listAdmin = listAdmin;
+
+  $("#newCar").onclick = async ()=>{
+    const title   = prompt("Título Completo (ex.: T-Cross Comfortline 200 TSI)"); if(!title) return;
+    const price   = +prompt("Preço (números)")||0;
+    const year    = +prompt("Ano/Modelo")||new Date().getFullYear();
+    const gearbox = prompt("Câmbio (Automático/Manual)","Automático")||"Automático";
+    const fuel    = prompt("Combustível (Flex/Diesel/Elétrico)","Flex")||"Flex";
+    const promo   = prompt("Tag de Promoção (ex.: Taxa Zero)")||"Oportunidade";
+    const promoText = prompt("Texto da Promoção (ex.: Bónus de R$ 8.000)")||"Oferta válida este mês.";
+    const categoria = prompt("Categoria (SUV/Sedan/Hatch)","SUV")||"SUV";
+    
+    const { error } = await sb.from("vehicle").insert({ 
+      dealer_id: dealerProfile.id, title, price, year, gearbox, fuel, status:"ativo", promotion_tag: promo, promotion_text: promoText, ficha_tecnica: { Categoria: categoria, Motor: "TSI", Câmbio: gearbox }
+    });
+    if(error) alert("Erro ao criar carro: "+error.message); else listAdmin();
+  };
+
+  $("#seed").onclick = async ()=>{
+    if(!confirm("Inserir 5 veículos de exemplo no banco?")) return;
+    const payload = DEMO.map(v => ({ 
+      dealer_id: dealerProfile.id, 
+      title:v.title, 
+      year:v.year, 
+      price:v.price, 
+      gearbox:v.gearbox, 
+      fuel:v.fuel, 
+      status:"ativo", 
+      destaque:!!v.destaque, 
+      promotion_tag:v.promotion_tag, 
+      promotion_text:v.promotion_text, 
+      // Usando valores fixos do DEMO para a ficha técnica (simplificado para o seed)
+      ficha_tecnica: v.ficha_tecnica || {}
+    }));
+    const { error } = await sb.from("vehicle").insert(payload);
+    if(error) alert("Erro ao inserir Seed: "+error.message); else listAdmin();
+  };
+
+  $("#refresh").onclick = ()=> listAdmin();
+
+  window.admToggle = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("status").eq("id", id).single();
+    await sb.from("vehicle").update({ status: (v.status==='ativo'?'pausado':'ativo') }).eq("id", id);
+    listAdmin(); fetchVehicles();
+  };
+
+  window.admEdit = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("*").eq("id", id).single();
+    const title = prompt("Título", v.title);
+    const price = +prompt("Preço", v.price);
+    const year  = +prompt("Ano/Modelo", v.year);
+    const promo   = prompt("Tag de Promoção", v.promotion_tag);
+    const promoText = prompt("Texto da Promoção", v.promotion_text);
+    await sb.from("vehicle").update({ title, price, year, promotion_tag: promo, promotion_text: promoText }).eq("id", id);
+    listAdmin();
+  };
+
+  window.admStar = async (id)=>{
+    const { data: v } = await sb.from("vehicle").select("destaque").eq("id", id).single();
+    await sb.from("vehicle").update({ destaque: !v.destaque }).eq("id", id);
+    listAdmin(); fetchVehicles();
+  };
+
+  window.admFoto = async (id, dealerId)=>{
+    const input = Object.assign(document.createElement("input"),{ type:"file", accept:"image/*", multiple:true });
+    input.onchange = async ()=>{
+      if(!input.files.length) return;
+      
+      const existingPhotos = (await sb.from("vehicle").select("photos").eq("id", id).single()).data?.photos || [];
+      
+      for(let i=0; i<input.files.length; i++){
+          const file = input.files[i];
+          const path = `photos/${dealerId}/${id}/${Date.now()}-${file.name}`;
+          const up = await sb.storage.from("car-photos").upload(path, file, { cacheControl:"3600", upsert:false });
+          if(up.error) { console.error(up.error.message); alert("Erro ao enviar foto: "+up.error.message); continue; }
+          
+          const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl;
+          existingPhotos.push(url);
       }
-      if(act==="del"){ if(confirm("Excluir este veículo?")){ await sb.from("vehicle").delete().eq("id",id); loadCars(); fetchVehicles(); } }
-      if(act==="foto"){ openPhotos(id); }
+      
+      await sb.from("vehicle").update({ photos: existingPhotos }).eq("id", id);
+      alert(`${input.files.length} foto(s) enviada(s)!`);
+      listAdmin();
     };
-  });
+    input.click();
+  };
+  listAdmin();
 }
 
-/* ====== Fotos: upload / substituir / remover / ordenar ====== */
-let currentVehicleId=null, photos=[];
-function openPhotos(id){ currentVehicleId=id; $("#over").classList.add("open"); loadPhotos(); }
-on($("#btnCloseOver"),"click",()=>$("#over").classList.remove("open"));
-on($("#btnUpFoto"),"click",()=>{ const i=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"}); i.onchange=upPhoto; i.click(); });
-async function upPhoto(ev){
-  const f=ev.target.files[0]; if(!f) return;
-  const path = dealerId + "/" + currentVehicleId + "/" + Date.now() + "-" + f.name;
-  const up = await sb.storage.from("car-photos").upload(path, f, { cacheControl:"3600", upsert:false });
-  if(up.error) return alert(up.error.message);
-  const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl;
-  const idx = photos.length;
-  await sb.from("vehicle_photo").insert({ vehicle_id:currentVehicleId, url, idx });
-  loadPhotos();
-}
-async function loadPhotos(){
-  const r = await sb.from("vehicle_photo").select("id,url,idx").eq("vehicle_id",currentVehicleId).order("idx");
-  photos = r.data||[];
-  const pg=$("#pg"); pg.innerHTML="";
-  if(!photos.length) pg.innerHTML = "<div class='muted'>Sem fotos. Faça upload acima.</div>";
-  photos.forEach((p,i)=>{
-    const el=document.createElement("div"); el.className="ph"; el.draggable=true; el.dataset.index=i;
-    el.innerHTML=`<img src="${p.url}"><div class="tag">${i===0?"Capa":"Foto "+(i+1)}</div>
-      <div class="bar">
-        <button class="btn" data-rp="${i}">Substituir</button>
-        <button class="btn warn" data-rm="${i}">Remover</button>
-        <button class="btn" data-top="${i}">Tornar capa</button>
-      </div>`;
-    el.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",i);});
-    el.addEventListener("dragover",e=>e.preventDefault());
-    el.addEventListener("drop",e=>{ e.preventDefault(); const from=+e.dataTransfer.getData("text/plain"); const to=+el.dataset.index; if(from===to) return; const it=photos.splice(from,1)[0]; photos.splice(to,0,it); renderTempOrder(); });
-    pg.appendChild(el);
-  });
-  wirePhotoButtons();
-}
-function renderTempOrder(){ $("#pg").querySelectorAll(".ph").forEach((el,i)=>{ el.dataset.index=i; el.querySelector(".tag").textContent = i===0?"Capa":"Foto "+(i+1); }); }
-function wirePhotoButtons(){
-  $("#pg").querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{ const i=+b.dataset.rm; const p=photos[i]; await sb.from("vehicle_photo").delete().eq("id",p.id); loadPhotos(); });
-  $("#pg").querySelectorAll("[data-top]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.top; const it=photos.splice(i,1)[0]; photos.unshift(it); renderTempOrder(); });
-  $("#pg").querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.rp; const input=Object.assign(document.createElement("input"),{type:"file",accept:"image/*"}); input.onchange=async(e)=>{ const f=e.target.files[0]; if(!f) return; const path = dealerId + "/" + currentVehicleId + "/" + Date.now() + "-" + f.name; const up=await sb.storage.from("car-photos").upload(path,f,{cacheControl:"3600",upsert:false}); if(up.error) return alert(up.error.message); const url = sb.storage.from("car-photos").getPublicUrl(path).data.publicUrl; await sb.from("vehicle_photo").update({ url }).eq("id", photos[i].id); loadPhotos(); }; input.click(); });
-}
-on($("#btnSaveOrder"),"click",async()=>{ await Promise.all(photos.map((p,idx)=> sb.from("vehicle_photo").update({ idx }).eq("id",p.id) )); alert("Ordem salva!"); loadPhotos(); fetchVehicles(); });
-
-/* ====== Leads ====== */
-async function loadLeads(){
-  const { data: raw } = await sb.from("lead").select("created_at,channel,vehicle_id,message").order("created_at",{ascending:false}).limit(100);
-  const ids=[...new Set((raw||[]).map(l=>l.vehicle_id))], names={};
-  if(ids.length){ const r=await sb.from("vehicle").select("id,title").in("id",ids); (r.data||[]).forEach(v=>names[v.id]=v.title); }
-  const leads=(raw||[]).map(l=>({ when:new Date(l.created_at).toLocaleString("pt-BR"), channel:l.channel, vehicle:names[l.vehicle_id]||l.vehicle_id, message:l.message }));
-  const tbl=$("#leadsTable"); tbl.querySelectorAll(".row:not(.head)").forEach(e=>e.remove());
-  leads.forEach(L=>{ const r=document.createElement("div"); r.className="row"; r.style.gridTemplateColumns="1fr .9fr .7fr 2fr";
-    r.innerHTML=`<div>${L.when}</div><div>${L.channel}</div><div>${L.vehicle}</div><div>${L.message}</div>`; tbl.appendChild(r); });
-}
-
-/* ====== Config ====== */
-on($("#cfgSave"),"click",async()=>{
-  const name=$("#cfgName").value.trim(), city=$("#cfgCity").value.trim(), whatsapp=$("#cfgWa").value.trim(), brand_color=$("#cfgColor").value;
-  const { error } = await sb.from("dealer").update({ name, city, whatsapp, brand_color }).eq("id",dealerId);
-  if(error) alert(error.message); else { dealer={...dealer,name,city,whatsapp,brand_color}; applyBrand(brand_color); setWA(whatsapp); alert("Salvo!"); $("#dealerInfo").textContent = `${dealer.name} • ${dealer.city} • WhatsApp: ${dealer.whatsapp}`; }
+// ===== AUTH WIRING =====
+sb.auth.getSession().then(({ data })=>{ if(data.session){ bootstrapAdmin(data.session); } });
+sb.auth.onAuthStateChange((_evt, s)=>{ 
+    if(s?.session){ 
+        bootstrapAdmin(s.session); 
+    } else {
+        if(location.hash === '#/admin') {
+            show('page-admin');
+            $("#box-login").classList.remove("hide");
+            $("#box-app").classList.add("hide");
+        }
+    }
+    injectAdminLink();
 });
 
-/* ====== Subs ====== */
-sb.channel("rt_photos").on("postgres_changes",{event:"*",schema:"public",table:"vehicle_photo"},loadPhotos).subscribe();
+// ===== ROUTER =====
+function route(path, filter){
+  if(path==="portfolio"){ show("page-portfolio"); return false; }
+  if(path==="catalogo"){ 
+    show("page-catalogo"); 
+    fetchVehicles(); 
+    const q = $("#q");
+    if(filter === 'lancamentos') { q.value = '2025'; q.dispatchEvent(new Event('input')); }
+    if(filter === 'promocao') { q.value = 'bónus'; q.dispatchEvent(new Event('input')); }
+    if(filter === 'modelos') { q.value = ''; q.dispatchEvent(new Event('input')); }
+    return false; 
+  }
+  if(path==="admin"){ 
+    sb.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+            bootstrapAdmin(session);
+        } else {
+            show('page-admin');
+            $("#box-login").classList.remove("hide");
+            $("#box-app").classList.add("hide");
+        }
+    });
+    return false; 
+  }
+  return false;
+}
+window.addEventListener("hashchange", ()=>{
+  const h = location.hash.split("/");
+  if(h[1]==="carro" && h[2]){ navDetalhe(h[2]); }
+  else if(h[1]==="catalogo"){ 
+    const urlParams = new URLSearchParams(location.hash.substring(location.hash.indexOf('?')+1));
+    route('catalogo', urlParams.get('filter'));
+  }
+  else if(h[1]==="admin"){ route('admin'); }
+  else { route('portfolio'); }
+  injectAdminLink();
+});
+
+// ===== INIT & REALTIME =====
+document.getElementById("y").textContent = new Date().getFullYear();
+["#q","#fModel","#fy","#fCat","#fs"].forEach(sel => document.querySelector(sel).addEventListener("input", debounce(renderCatalog,120)));
+sb.channel("rt").on("postgres_changes", { event:"*", schema:"public", table:"vehicle" }, fetchVehicles).subscribe();
+
+// Redireciona para a rota correta ao carregar a página
+if(location.hash){ window.dispatchEvent(new Event('hashchange')); }
+else { route('portfolio'); }
+
+injectAdminLink();
+fetchVehicles();
 </script>
 </body>
 </html>
